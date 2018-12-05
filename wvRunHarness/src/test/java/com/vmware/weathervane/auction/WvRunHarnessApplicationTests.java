@@ -15,22 +15,78 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
+import java.util.LinkedList;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vmware.weathervane.auction.WvRunHarnessApplication;
+import com.vmware.weathervane.auction.model.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = WvRunHarnessApplication.class)
 @WebAppConfiguration
 public class WvRunHarnessApplicationTests {
 
+    @Autowired
+    protected WebApplicationContext wac;
+ 
+    private MockMvc mockMvc;
+ 
+    @Before
+    public void setup() {
+        this.mockMvc = webAppContextSetup(this.wac).build();
+    }
+    
 	@Test
-	public void contextLoads() {
+	public void testGet() throws Exception {
+//		ResultActions resultActions = 
+		mockMvc.perform(get("/runConfiguration")).andExpect(status().isOk());
+//		resultActions.andDo(MockMvcResultHandlers.print());
+	}
+
+	@Test
+	public void testPost() throws Exception {
+		RunConfiguration runConfiguration = new RunConfiguration();
+		
+		// add required inputs
+		runConfiguration.setDockerNamespace("testnamespace");
+		
+		ComputeResource computeResource = new ComputeResourceDocker();
+		computeResource.setName("docker1");
+		LinkedList<ComputeResource> computeResources = new LinkedList<ComputeResource>();
+		computeResources.add(computeResource);
+		runConfiguration.setComputeResources(computeResources);
+		//
+
+		// add optional inputs
+		runConfiguration.setDescription("testPost");
+		//
+		
+		String input = new ObjectMapper().writeValueAsString(runConfiguration);
+
+//		ResultActions resultActions = 
+		mockMvc.perform(post("/runConfiguration").contentType(MediaType.APPLICATION_JSON).content(input)).andExpect(status().isOk());
+//		resultActions.andDo(MockMvcResultHandlers.print());
 	}
 
 }

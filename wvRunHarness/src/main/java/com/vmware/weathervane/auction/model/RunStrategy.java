@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 VMware, Inc. All Rights Reserved.
+Copyright (c) 2018 VMware, Inc. All Rights Reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
@@ -16,8 +16,25 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package com.vmware.weathervane.auction.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class Service {
+@JsonTypeInfo(use = com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME, include = As.PROPERTY, property = "type")
+@JsonSubTypes({ 
+		@Type(value = RunStrategyFixed.class, name = "fixed"),
+		@Type(value = RunStrategyTargetUtilization.class, name = "targetUtilization"),
+		@Type(value = RunStrategyCustom.class, name = "custom"),
+		@Type(value = RunStrategyFindMaxSingleAI.class, name = "findMaxSingleAI"),
+		@Type(value = RunStrategyFindMaxSingleAIWithScaling.class, name = "findMaxSingleAIWithScaling"),
+		@Type(value = RunStrategyFindMaxMultiAI.class, name = "findMaxMultiAI"),
+		@Type(value = RunStrategyFindMaxMultiRun.class, name = "findMaxMultiRun"),
+		@Type(value = RunStrategyInterval.class, name = "interval"),
+
+})
+
+@JsonIgnoreProperties(ignoreUnknown=true)
+public abstract class RunStrategy {
 
 }

@@ -66,7 +66,6 @@
 
   "runProcedure" : "full", # Possible values: full, loadOnly, prepareOnly, runOnly, stop
 
-  "version" : true,
   "interactive" : false,
 
   # computeResources is a list of ComputeResources
@@ -92,8 +91,6 @@
       "name" : "aClusterName",
       "type" : "kubernetes",
 
-      # This won't work if running in a container.  Need to include the config file
-      # contents here, not a pointer to the file.
       "kubernetesConfigFile" : "filePointer",
     },
     {

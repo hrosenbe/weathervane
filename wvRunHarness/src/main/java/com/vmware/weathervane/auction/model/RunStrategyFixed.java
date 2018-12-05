@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 VMware, Inc. All Rights Reserved.
+Copyright (c) 2018 VMware, Inc. All Rights Reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
@@ -17,7 +17,54 @@ package com.vmware.weathervane.auction.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class Service {
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class RunStrategyFixed extends RunStrategy {
+	// type specific
+	private int users = 1000;
+	private String runLength = "short";
+	private long rampUp = 600;
+	private long steadyState = 900;
+	private long rampDown = 120;
+
+	// getters and setters
+	public int getUsers() {
+		return users;
+	}
+
+	public void setUsers(int users) {
+		this.users = users;
+	}
+
+	public String getRunLength() {
+		return runLength;
+	}
+
+	public void setRunLength(String runLength) {
+		this.runLength = runLength;
+	}
+
+	public long getRampUp() {
+		return rampUp;
+	}
+
+	public void setRampUp(long rampUp) {
+		this.rampUp = rampUp;
+	}
+
+	public long getSteadyState() {
+		return steadyState;
+	}
+
+	public void setSteadyState(long steadyState) {
+		this.steadyState = steadyState;
+	}
+
+	public long getRampDown() {
+		return rampDown;
+	}
+
+	public void setRampDown(long rampDown) {
+		this.rampDown = rampDown;
+	}
 
 }

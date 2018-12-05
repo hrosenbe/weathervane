@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 VMware, Inc. All Rights Reserved.
+Copyright (c) 2018 VMware, Inc. All Rights Reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
@@ -17,7 +17,44 @@ package com.vmware.weathervane.auction.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class Service {
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class AuctionCoordinationServer extends AuctionService {
+	private int zkClientPort = 2181;
+	private int zkPeerPort = 2888;
+	private int zkElectionPort = 3888;
+	private int portStep = 1;
+
+	// getters and setters
+	public int getZkClientPort() {
+		return zkClientPort;
+	}
+
+	public void setZkClientPort(int zkClientPort) {
+		this.zkClientPort = zkClientPort;
+	}
+
+	public int getZkPeerPort() {
+		return zkPeerPort;
+	}
+
+	public void setZkPeerPort(int zkPeerPort) {
+		this.zkPeerPort = zkPeerPort;
+	}
+
+	public int getZkElectionPort() {
+		return zkElectionPort;
+	}
+
+	public void setZkElectionPort(int zkElectionPort) {
+		this.zkElectionPort = zkElectionPort;
+	}
+
+	public int getPortStep() {
+		return portStep;
+	}
+
+	public void setPortStep(int portStep) {
+		this.portStep = portStep;
+	}
 
 }

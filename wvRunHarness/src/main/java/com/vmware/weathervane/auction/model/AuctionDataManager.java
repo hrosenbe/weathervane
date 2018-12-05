@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 VMware, Inc. All Rights Reserved.
+Copyright (c) 2018 VMware, Inc. All Rights Reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
@@ -17,7 +17,26 @@ package com.vmware.weathervane.auction.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class Service {
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class AuctionDataManager extends AuctionService {
+	private int threads = 6;
+	private String jvmOpts = "-Xmx4g -Xms4G";
+
+	// getters and setters
+	public int getThreads() {
+		return threads;
+	}
+
+	public void setThreads(int threads) {
+		this.threads = threads;
+	}
+
+	public String getJvmOpts() {
+		return jvmOpts;
+	}
+
+	public void setJvmOpts(String jvmOpts) {
+		this.jvmOpts = jvmOpts;
+	}
 
 }

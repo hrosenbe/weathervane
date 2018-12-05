@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vmware.weathervane.auction.exception.DuplicateRunConfigurationException;
 import com.vmware.weathervane.auction.message.GetRunConfigurationResponse;
 import com.vmware.weathervane.auction.message.ResponseMessage;
@@ -55,13 +57,14 @@ public class RunConfigurationController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public HttpEntity<ResponseMessage> addRunConfiguration(@RequestBody RunConfiguration runConfiguration) {
+	public HttpEntity<ResponseMessage> addRunConfiguration(@RequestBody RunConfiguration runConfiguration) throws JsonProcessingException {
 		ResponseMessage addConfigurationResponse = new ResponseMessage();
 		HttpStatus status = HttpStatus.OK;
 		logger.debug("addConfiguration: " + runConfiguration.toString());
+		//logger.warn("addConfiguration: " + new ObjectMapper().writeValueAsString(runConfiguration));
 		try {
 			/*
-			 * Send the the runConfiguration on to the servive that handles (and possible stores) it.
+			 * Send the the runConfiguration on to the service that handles (and possible stores) it.
 			 */
 			runConfigurationService.setRunConfiguration(runConfiguration);
 			

@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 VMware, Inc. All Rights Reserved.
+Copyright (c) 2018 VMware, Inc. All Rights Reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
@@ -17,7 +17,26 @@ package com.vmware.weathervane.auction.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class Service {
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class AuctionMsgServer extends AuctionService {
+	private int rabbitmqPort = 5672;
+	private int portStep = 1;
+
+	// getters and setters
+	public int getRabbitmqPort() {
+		return rabbitmqPort;
+	}
+
+	public void setRabbitmqPort(int rabbitmqPort) {
+		this.rabbitmqPort = rabbitmqPort;
+	}
+
+	public int getPortStep() {
+		return portStep;
+	}
+
+	public void setPortStep(int portStep) {
+		this.portStep = portStep;
+	}
 
 }
