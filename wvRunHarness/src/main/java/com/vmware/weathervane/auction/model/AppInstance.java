@@ -18,16 +18,6 @@ package com.vmware.weathervane.auction.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class ComputeResourceKubernetes extends ComputeResource {
-	private String kubernetesConfigFile = "";
-
-	// getters and setters
-	public String getKubernetesConfigFile() {
-		return kubernetesConfigFile;
-	}
-
-	public void setKubernetesConfigFile(String kubernetesConfigFile) {
-		this.kubernetesConfigFile = kubernetesConfigFile;
-	}
-
+public abstract class AppInstance {
+	
 }

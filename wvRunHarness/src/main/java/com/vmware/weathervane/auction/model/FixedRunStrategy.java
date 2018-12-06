@@ -15,23 +15,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class RunStrategyCustom extends RunStrategy {
-	// same as Fixed
+public class FixedRunStrategy extends RunStrategy {
+	// type specific
 	private int users = 1000;
 	private String runLength = "short";
 	private long rampUp = 600;
 	private long steadyState = 900;
 	private long rampDown = 120;
-	
-	// type specific
-	private List<String> loadPath = new LinkedList<String>();
-	private boolean repeatLoadPath = true;
 
 	// getters and setters
 	public int getUsers() {
@@ -74,20 +67,4 @@ public class RunStrategyCustom extends RunStrategy {
 		this.rampDown = rampDown;
 	}
 
-	public List<String> getLoadPath() {
-		return loadPath;
-	}
-
-	public void setLoadPath(List<String> loadPath) {
-		this.loadPath = loadPath;
-	}
-
-	public boolean isRepeatLoadPath() {
-		return repeatLoadPath;
-	}
-
-	public void setRepeatLoadPath(boolean repeatLoadPath) {
-		this.repeatLoadPath = repeatLoadPath;
-	}
-	
 }

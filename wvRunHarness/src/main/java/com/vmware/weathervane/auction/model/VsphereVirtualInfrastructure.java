@@ -15,9 +15,29 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class RunStrategyInterval extends RunStrategy{
+public class VsphereVirtualInfrastructure extends VirtualInfrastructure {
+	private MgmtHost mgmtHost;
+	private List<Host> hosts;
 
+	// getters and setters
+	public MgmtHost getMgmtHost() {
+		return mgmtHost;
+	}
+
+	public void setMgmtHost(MgmtHost mgmtHost) {
+		this.mgmtHost = mgmtHost;
+	}
+
+	public List<Host> getHosts() {
+		return hosts;
+	}
+
+	public void setHosts(List<Host> hosts) {
+		this.hosts = hosts;
+	}
 }

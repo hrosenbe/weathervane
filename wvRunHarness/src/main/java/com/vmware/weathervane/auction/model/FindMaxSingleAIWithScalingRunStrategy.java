@@ -16,29 +16,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package com.vmware.weathervane.auction.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
-
-@JsonTypeInfo(use = com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME, include = As.PROPERTY, property = "type")
-@JsonSubTypes({ 
-		@Type(value = DockerComputeResource.class, name = "docker"),
-		@Type(value = KubernetesComputeResource.class, name = "kubernetes"),
-
-})
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public abstract class ComputeResource {
-	private String name;
+public class FindMaxSingleAIWithScalingRunStrategy extends RunStrategy{
 
-	// getters and setters
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	
 }

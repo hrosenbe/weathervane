@@ -18,25 +18,6 @@ package com.vmware.weathervane.auction.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class ComputeResourceDocker extends ComputeResource {
-	private boolean vicHost = false;
-	private int dockerHostPort = 2376;
-
-	// getters and setters
-	public boolean isVicHost() {
-		return vicHost;
-	}
-
-	public void setVicHost(boolean vicHost) {
-		this.vicHost = vicHost;
-	}
-
-	public int getDockerHostPort() {
-		return dockerHostPort;
-	}
-
-	public void setDockerHostPort(int dockerHostPort) {
-		this.dockerHostPort = dockerHostPort;
-	}
+public class FindMaxSingleAIRunStrategy extends RunStrategy{
 
 }

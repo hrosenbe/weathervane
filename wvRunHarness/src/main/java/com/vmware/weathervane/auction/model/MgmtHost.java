@@ -18,82 +18,42 @@ package com.vmware.weathervane.auction.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class RunStrategyFindMaxMultiRun extends RunStrategy{
-	// same as Fixed
-	private int users = 1000;
-	private String runLength = "short";
-	private long rampUp = 600;
-	private long steadyState = 900;
-	private long rampDown = 120;
-	
-	// type specific
-	private long initialRateStep = 500;
-	private long minRateStep = 250;
-	private int repeatsAtMax = 0;
+public class MgmtHost {
+	private String type;
+	private String hostname;
+	private String username;
+	private String password;
 
 	// getters and setters
-	public int getUsers() {
-		return users;
+	public String getType() {
+		return type;
 	}
 
-	public void setUsers(int users) {
-		this.users = users;
+	public void setType(String type) {
+		this.type = type;
 	}
 
-	public String getRunLength() {
-		return runLength;
+	public String getHostname() {
+		return hostname;
 	}
 
-	public void setRunLength(String runLength) {
-		this.runLength = runLength;
+	public void setHostname(String hostname) {
+		this.hostname = hostname;
 	}
 
-	public long getRampUp() {
-		return rampUp;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setRampUp(long rampUp) {
-		this.rampUp = rampUp;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
-	public long getSteadyState() {
-		return steadyState;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setSteadyState(long steadyState) {
-		this.steadyState = steadyState;
+	public void setPassword(String password) {
+		this.password = password;
 	}
-
-	public long getRampDown() {
-		return rampDown;
-	}
-
-	public void setRampDown(long rampDown) {
-		this.rampDown = rampDown;
-	}
-
-	public long getInitialRateStep() {
-		return initialRateStep;
-	}
-
-	public void setInitialRateStep(long initialRateStep) {
-		this.initialRateStep = initialRateStep;
-	}
-
-	public long getMinRateStep() {
-		return minRateStep;
-	}
-
-	public void setMinRateStep(long minRateStep) {
-		this.minRateStep = minRateStep;
-	}
-
-	public int getRepeatsAtMax() {
-		return repeatsAtMax;
-	}
-
-	public void setRepeatsAtMax(int repeatsAtMax) {
-		this.repeatsAtMax = repeatsAtMax;
-	}
-
 }

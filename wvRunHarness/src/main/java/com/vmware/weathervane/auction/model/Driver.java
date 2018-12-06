@@ -18,53 +18,6 @@ package com.vmware.weathervane.auction.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class RunStrategyFixed extends RunStrategy {
-	// type specific
-	private int users = 1000;
-	private String runLength = "short";
-	private long rampUp = 600;
-	private long steadyState = 900;
-	private long rampDown = 120;
-
-	// getters and setters
-	public int getUsers() {
-		return users;
-	}
-
-	public void setUsers(int users) {
-		this.users = users;
-	}
-
-	public String getRunLength() {
-		return runLength;
-	}
-
-	public void setRunLength(String runLength) {
-		this.runLength = runLength;
-	}
-
-	public long getRampUp() {
-		return rampUp;
-	}
-
-	public void setRampUp(long rampUp) {
-		this.rampUp = rampUp;
-	}
-
-	public long getSteadyState() {
-		return steadyState;
-	}
-
-	public void setSteadyState(long steadyState) {
-		this.steadyState = steadyState;
-	}
-
-	public long getRampDown() {
-		return rampDown;
-	}
-
-	public void setRampDown(long rampDown) {
-		this.rampDown = rampDown;
-	}
+public abstract class Driver {
 
 }

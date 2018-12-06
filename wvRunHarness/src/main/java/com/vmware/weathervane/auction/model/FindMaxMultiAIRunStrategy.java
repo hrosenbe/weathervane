@@ -18,6 +18,6 @@ package com.vmware.weathervane.auction.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class RunStrategyFindMaxSingleAI extends RunStrategy{
+public class FindMaxMultiAIRunStrategy extends RunStrategy{
 
 }

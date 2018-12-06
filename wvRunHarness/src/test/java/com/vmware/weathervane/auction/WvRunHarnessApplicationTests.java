@@ -71,7 +71,7 @@ public class WvRunHarnessApplicationTests {
 		// add required inputs
 		runConfiguration.setDockerNamespace("testnamespace");
 		
-		ComputeResource computeResource = new ComputeResourceDocker();
+		ComputeResource computeResource = new DockerComputeResource();
 		computeResource.setName("docker1");
 		LinkedList<ComputeResource> computeResources = new LinkedList<ComputeResource>();
 		computeResources.add(computeResource);

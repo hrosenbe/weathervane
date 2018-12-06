@@ -15,24 +15,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Defaults {
-	//TODO define which parameters can be overridden by this class
-	
-	// override workload.appInstances (all services in all AppInstances) 
-	private List<Service> services = new LinkedList<Service>();
+public class IntervalRunStrategy extends RunStrategy{
 
-	public List<Service> getServices() {
-		return services;
-	}
-
-	public void setServices(List<Service> services) {
-		this.services = services;
-	}
-	
 }

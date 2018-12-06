@@ -15,9 +15,58 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class RunStrategyFindMaxSingleAIWithScaling extends RunStrategy{
+public class AuctionAppInstance extends AppInstance {
+	private List<String> loadPath = new LinkedList<String>();
+	private boolean repeatLoadPath = true;
+	private String computeResourceName;
+	private String imageStoreType = "mongodb";
+	private List<AuctionService> services = new LinkedList<AuctionService>();
+	
+	// getters and setters
+	public List<String> getLoadPath() {
+		return loadPath;
+	}
 
+	public void setLoadPath(List<String> loadPath) {
+		this.loadPath = loadPath;
+	}
+
+	public boolean isRepeatLoadPath() {
+		return repeatLoadPath;
+	}
+
+	public void setRepeatLoadPath(boolean repeatLoadPath) {
+		this.repeatLoadPath = repeatLoadPath;
+	}
+
+	public String getComputeResourceName() {
+		return computeResourceName;
+	}
+
+	public void setComputeResourceName(String computeResourceName) {
+		this.computeResourceName = computeResourceName;
+	}
+
+	public String getImageStoreType() {
+		return imageStoreType;
+	}
+
+	public void setImageStoreType(String imageStoreType) {
+		this.imageStoreType = imageStoreType;
+	}
+
+	public List<AuctionService> getServices() {
+		return services;
+	}
+
+	public void setServices(List<AuctionService> services) {
+		this.services = services;
+	}
+	
 }

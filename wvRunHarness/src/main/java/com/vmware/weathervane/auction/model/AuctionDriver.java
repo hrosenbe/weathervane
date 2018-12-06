@@ -21,60 +21,9 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class WorkloadAuction extends Workload {
-	private Driver driver = new Driver();
-	private List<AuctionAppInstance> appInstances = new LinkedList<AuctionAppInstance>();
-
-    public WorkloadAuction() {
-		super();
-
-		// create a default list of services in a default app instance
-		List<AuctionService> serviceList = new LinkedList<AuctionService>();
-
-		AuctionAppServer appServer = new AuctionAppServer();
-		serviceList.add(appServer);
-		AuctionBidServer bidServer = new AuctionBidServer();
-		serviceList.add(bidServer);
-		AuctionCoordinationServer coordServer = new AuctionCoordinationServer();
-		serviceList.add(coordServer);
-		AuctionDataManager dmServer = new AuctionDataManager();
-		serviceList.add(dmServer);
-		AuctionDbServer dbServer = new AuctionDbServer();
-		serviceList.add(dbServer);
-		AuctionMsgServer msgServer = new AuctionMsgServer();
-		serviceList.add(msgServer);
-		AuctionNosqlServer nosqlServer = new AuctionNosqlServer();
-		serviceList.add(nosqlServer);
-		AuctionWebServer webServer = new AuctionWebServer();
-		serviceList.add(webServer);
-
-		AuctionAppInstance appInstance = new AuctionAppInstance();
-		appInstance.setServices(serviceList);
-		appInstances.add(appInstance);
-	}
-
-	// getters and setters
-	public Driver getDriver() {
-		return driver;
-	}
-
-	public void setDriver(Driver driver) {
-		this.driver = driver;
-	}
-
-	public List<AuctionAppInstance> getAppInstances() {
-		return appInstances;
-	}
-
-	public void setAppInstances(List<AuctionAppInstance> appInstances) {
-		this.appInstances = appInstances;
-	}
-
-}
-
-class Driver {
+public class AuctionDriver extends Driver {
 	private int numInstances = 1;
-	private List<ComputeResource> computeResources = new LinkedList<ComputeResource>();
+	private List<String> computeResourceNames = new LinkedList<String>();
 	private int port = 7500;
 	private int portStep = 1;
 	private String workloadProfile = "auction";
@@ -88,13 +37,6 @@ class Driver {
 	private String memLimit = "7Gi";
     
 	// getters and setters
-	public List<ComputeResource> getComputeResources() {
-		return computeResources;
-	}
-
-	public void setComputeResources(List<ComputeResource> computeResources) {
-		this.computeResources = computeResources;
-	}
 
 	public int getNumInstances() {
 		return numInstances;
@@ -102,6 +44,14 @@ class Driver {
 
 	public void setNumInstances(int numInstances) {
 		this.numInstances = numInstances;
+	}
+
+	public List<String> getComputeResourceNames() {
+		return computeResourceNames;
+	}
+
+	public void setComputeResourceNames(List<String> computeResourceNames) {
+		this.computeResourceNames = computeResourceNames;
 	}
 
 	public int getPort() {
@@ -192,54 +142,4 @@ class Driver {
 		this.memLimit = memLimit;
 	}
 
-}
-
-class AuctionAppInstance {
-	private List<String> loadPath = new LinkedList<String>();
-	private boolean repeatLoadPath = true;
-	private ComputeResource computeResource;
-	private String imageStoreType = "mongodb";
-	private List<AuctionService> services = new LinkedList<AuctionService>();
-	
-	// getters and setters
-	public List<String> getLoadPath() {
-		return loadPath;
-	}
-
-	public void setLoadPath(List<String> loadPath) {
-		this.loadPath = loadPath;
-	}
-
-	public boolean isRepeatLoadPath() {
-		return repeatLoadPath;
-	}
-
-	public void setRepeatLoadPath(boolean repeatLoadPath) {
-		this.repeatLoadPath = repeatLoadPath;
-	}
-
-	public ComputeResource getComputeResource() {
-		return computeResource;
-	}
-
-	public void setComputeResource(ComputeResource computeResource) {
-		this.computeResource = computeResource;
-	}
-
-	public String getImageStoreType() {
-		return imageStoreType;
-	}
-
-	public void setImageStoreType(String imageStoreType) {
-		this.imageStoreType = imageStoreType;
-	}
-
-	public List<AuctionService> getServices() {
-		return services;
-	}
-
-	public void setServices(List<AuctionService> services) {
-		this.services = services;
-	}
-	
 }

@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 
 @JsonTypeInfo(use = com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME, include = As.PROPERTY, property = "type")
 @JsonSubTypes({ 
-		@Type(value = VirtualInfrastructureVsphere.class, name = "vsphere"),
+		@Type(value = VsphereVirtualInfrastructure.class, name = "vsphere"),
 
 })
 

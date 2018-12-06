@@ -39,7 +39,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class AuctionService extends Service {
 	private int numInstances = 1;
-	private List<ComputeResource> computeResources = new LinkedList<ComputeResource>();
+	private List<String> computeResourceNames = new LinkedList<String>();
 
 	// getters and setters
 	public int getNumInstances() {
@@ -50,12 +50,12 @@ public abstract class AuctionService extends Service {
 		this.numInstances = numInstances;
 	}
 
-	public List<ComputeResource> getComputeResources() {
-		return computeResources;
+	public List<String> getComputeResourceNames() {
+		return computeResourceNames;
 	}
 
-	public void setComputeResources(List<ComputeResource> computeResources) {
-		this.computeResources = computeResources;
+	public void setComputeResourceNames(List<String> computeResourceNames) {
+		this.computeResourceNames = computeResourceNames;
 	}
-	
+
 }

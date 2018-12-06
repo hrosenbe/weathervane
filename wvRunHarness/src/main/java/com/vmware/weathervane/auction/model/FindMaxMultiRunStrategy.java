@@ -15,91 +15,85 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class VirtualInfrastructureVsphere extends VirtualInfrastructure {
-	private MgmtHost mgmtHost;
-	private List<Host> hosts;
+public class FindMaxMultiRunStrategy extends RunStrategy{
+	// same as Fixed
+	private int users = 1000;
+	private String runLength = "short";
+	private long rampUp = 600;
+	private long steadyState = 900;
+	private long rampDown = 120;
+	
+	// type specific
+	private long initialRateStep = 500;
+	private long minRateStep = 250;
+	private int repeatsAtMax = 0;
 
 	// getters and setters
-	public MgmtHost getMgmtHost() {
-		return mgmtHost;
+	public int getUsers() {
+		return users;
 	}
 
-	public void setMgmtHost(MgmtHost mgmtHost) {
-		this.mgmtHost = mgmtHost;
+	public void setUsers(int users) {
+		this.users = users;
 	}
 
-	public List<Host> getHosts() {
-		return hosts;
+	public String getRunLength() {
+		return runLength;
 	}
 
-	public void setHosts(List<Host> hosts) {
-		this.hosts = hosts;
-	}
-}
-
-class MgmtHost {
-	private String type;
-	private String hostname;
-	private String username;
-	private String password;
-
-	// getters and setters
-	public String getType() {
-		return type;
+	public void setRunLength(String runLength) {
+		this.runLength = runLength;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public long getRampUp() {
+		return rampUp;
 	}
 
-	public String getHostname() {
-		return hostname;
+	public void setRampUp(long rampUp) {
+		this.rampUp = rampUp;
 	}
 
-	public void setHostname(String hostname) {
-		this.hostname = hostname;
+	public long getSteadyState() {
+		return steadyState;
 	}
 
-	public String getUsername() {
-		return username;
+	public void setSteadyState(long steadyState) {
+		this.steadyState = steadyState;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public long getRampDown() {
+		return rampDown;
 	}
 
-	public String getPassword() {
-		return password;
+	public void setRampDown(long rampDown) {
+		this.rampDown = rampDown;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-}
-
-class Host {
-	private String type;
-	private String hostname;
-
-	// getters and setters
-	public String getType() {
-		return type;
+	public long getInitialRateStep() {
+		return initialRateStep;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setInitialRateStep(long initialRateStep) {
+		this.initialRateStep = initialRateStep;
 	}
 
-	public String getHostname() {
-		return hostname;
+	public long getMinRateStep() {
+		return minRateStep;
 	}
 
-	public void setHostname(String hostname) {
-		this.hostname = hostname;
-	}    
+	public void setMinRateStep(long minRateStep) {
+		this.minRateStep = minRateStep;
+	}
+
+	public int getRepeatsAtMax() {
+		return repeatsAtMax;
+	}
+
+	public void setRepeatsAtMax(int repeatsAtMax) {
+		this.repeatsAtMax = repeatsAtMax;
+	}
+
 }

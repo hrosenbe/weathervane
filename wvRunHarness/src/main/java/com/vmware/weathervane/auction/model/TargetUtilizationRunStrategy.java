@@ -18,7 +18,7 @@ package com.vmware.weathervane.auction.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class RunStrategyTargetUtilization extends RunStrategy {
+public class TargetUtilizationRunStrategy extends RunStrategy {
 	// same as Fixed
 	private int users = 1000;
 	private String runLength = "short";

@@ -15,26 +15,79 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
-
-@JsonTypeInfo(use = com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME, include = As.PROPERTY, property = "type")
-@JsonSubTypes({ 
-		@Type(value = FixedRunStrategy.class, name = "fixed"),
-		@Type(value = TargetUtilizationRunStrategy.class, name = "targetUtilization"),
-		@Type(value = CustomRunStrategy.class, name = "custom"),
-		@Type(value = FindMaxSingleAIRunStrategy.class, name = "findMaxSingleAI"),
-		@Type(value = FindMaxSingleAIWithScalingRunStrategy.class, name = "findMaxSingleAIWithScaling"),
-		@Type(value = FindMaxMultiAIRunStrategy.class, name = "findMaxMultiAI"),
-		@Type(value = FindMaxMultiRunStrategy.class, name = "findMaxMultiRun"),
-		@Type(value = IntervalRunStrategy.class, name = "interval"),
-
-})
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public abstract class RunStrategy {
+public class CustomRunStrategy extends RunStrategy {
+	// same as Fixed
+	private int users = 1000;
+	private String runLength = "short";
+	private long rampUp = 600;
+	private long steadyState = 900;
+	private long rampDown = 120;
+	
+	// type specific
+	private List<String> loadPath = new LinkedList<String>();
+	private boolean repeatLoadPath = true;
 
+	// getters and setters
+	public int getUsers() {
+		return users;
+	}
+
+	public void setUsers(int users) {
+		this.users = users;
+	}
+
+	public String getRunLength() {
+		return runLength;
+	}
+
+	public void setRunLength(String runLength) {
+		this.runLength = runLength;
+	}
+
+	public long getRampUp() {
+		return rampUp;
+	}
+
+	public void setRampUp(long rampUp) {
+		this.rampUp = rampUp;
+	}
+
+	public long getSteadyState() {
+		return steadyState;
+	}
+
+	public void setSteadyState(long steadyState) {
+		this.steadyState = steadyState;
+	}
+
+	public long getRampDown() {
+		return rampDown;
+	}
+
+	public void setRampDown(long rampDown) {
+		this.rampDown = rampDown;
+	}
+
+	public List<String> getLoadPath() {
+		return loadPath;
+	}
+
+	public void setLoadPath(List<String> loadPath) {
+		this.loadPath = loadPath;
+	}
+
+	public boolean isRepeatLoadPath() {
+		return repeatLoadPath;
+	}
+
+	public void setRepeatLoadPath(boolean repeatLoadPath) {
+		this.repeatLoadPath = repeatLoadPath;
+	}
+	
 }

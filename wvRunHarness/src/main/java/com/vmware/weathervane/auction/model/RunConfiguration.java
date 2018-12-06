@@ -23,12 +23,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class RunConfiguration {
 
-	// required fields
+	// required input fields
 	private String dockerNamespace;
 	private List<ComputeResource> computeResources = new LinkedList<ComputeResource>();
-	
-	// over ride defaults 
-	private Defaults defaults;
 	
 	// optional fields with default values
 	private String description = "default description";
@@ -66,8 +63,8 @@ public class RunConfiguration {
 		super();
 		
 		//create a default runStrategy and workload
-		runStrategy = new RunStrategyFixed();
-		Workload defaultWorkload = new WorkloadAuction();
+		runStrategy = new FixedRunStrategy();
+		Workload defaultWorkload = new AuctionWorkload();
 		workloads.add(defaultWorkload);
 	}
 	
@@ -230,14 +227,6 @@ public class RunConfiguration {
 
 	public void setComputeResources(List<ComputeResource> computeResources) {
 		this.computeResources = computeResources;
-	}
-
-	public Defaults getDefaults() {
-		return defaults;
-	}
-
-	public void setDefaults(Defaults defaults) {
-		this.defaults = defaults;
 	}
 
 	public LinkedList<Workload> getWorkloads() {
