@@ -30,6 +30,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,16 +60,21 @@ public class WvRunHarnessApplicationTests {
     
 	@Test
 	public void testGet() throws Exception {
-//		ResultActions resultActions = 
+		//ResultActions resultActions = 
 		mockMvc.perform(get("/runConfiguration")).andExpect(status().isOk());
-//		resultActions.andDo(MockMvcResultHandlers.print());
+		//resultActions.andDo(MockMvcResultHandlers.print());
 	}
 
 	@Test
 	public void testPost() throws Exception {
+		String input;
 		RunConfiguration runConfiguration = new RunConfiguration();
-		
-		// add required inputs
+
+		//should fail due to lacking required inputs
+		input = new ObjectMapper().writeValueAsString(runConfiguration);
+		mockMvc.perform(post("/runConfiguration").contentType(MediaType.APPLICATION_JSON).content(input)).andExpect(status().isBadRequest());
+
+		// add required inputs for which there are no defaults
 		runConfiguration.setDockerNamespace("testnamespace");
 		
 		ComputeResource computeResource = new DockerComputeResource();
@@ -76,17 +82,27 @@ public class WvRunHarnessApplicationTests {
 		LinkedList<ComputeResource> computeResources = new LinkedList<ComputeResource>();
 		computeResources.add(computeResource);
 		runConfiguration.setComputeResources(computeResources);
-		//
+		// end required inputs
 
-		// add optional inputs
+		// add optional inputs that will override the defaults
 		runConfiguration.setDescription("testPost");
+		RunStrategy runStrategy = new IntervalRunStrategy();
+		runConfiguration.setRunStrategy(runStrategy);
 		//
 		
-		String input = new ObjectMapper().writeValueAsString(runConfiguration);
-
-//		ResultActions resultActions = 
+		input = new ObjectMapper().writeValueAsString(runConfiguration);
+		// should succeed
 		mockMvc.perform(post("/runConfiguration").contentType(MediaType.APPLICATION_JSON).content(input)).andExpect(status().isOk());
-//		resultActions.andDo(MockMvcResultHandlers.print());
+		
+		// verify description and runStrategy were overridden, dockerNameSpace and computeResource were set 
+		mockMvc.perform(get("/runConfiguration"))
+			//.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(MockMvcResultMatchers.jsonPath("$.runConfiguration.dockerNamespace").value("testnamespace"))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.runConfiguration.computeResources[0].name").value("docker1"))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.runConfiguration.description").value("testPost"))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.runConfiguration.runStrategy.type").value("interval"))
+		;
 	}
 
 }

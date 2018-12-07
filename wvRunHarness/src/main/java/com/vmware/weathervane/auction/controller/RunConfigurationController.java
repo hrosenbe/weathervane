@@ -18,6 +18,8 @@ package com.vmware.weathervane.auction.controller;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +59,7 @@ public class RunConfigurationController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public HttpEntity<ResponseMessage> addRunConfiguration(@RequestBody RunConfiguration runConfiguration) throws JsonProcessingException {
+	public HttpEntity<ResponseMessage> addRunConfiguration(@Valid @RequestBody RunConfiguration runConfiguration) throws JsonProcessingException {
 		ResponseMessage addConfigurationResponse = new ResponseMessage();
 		HttpStatus status = HttpStatus.OK;
 		logger.debug("addConfiguration: " + runConfiguration.toString());

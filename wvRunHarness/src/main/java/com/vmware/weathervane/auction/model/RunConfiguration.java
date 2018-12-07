@@ -18,13 +18,20 @@ package com.vmware.weathervane.auction.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class RunConfiguration {
 
 	// required input fields
+	@NotNull
+	@Size(min = 1)
 	private String dockerNamespace;
+	@NotNull
+	@Size(min = 1)
 	private List<ComputeResource> computeResources = new LinkedList<ComputeResource>();
 	
 	// optional fields with default values
@@ -52,19 +59,23 @@ public class RunConfiguration {
 	private String runProcedure = "full";
 	private boolean interactive = false;
 
+	// optional fields with default values created in the constructor
 	private RunStrategy runStrategy;
-	private LinkedList<Workload> workloads = new LinkedList<Workload>();
-	private VirtualInfrastructure virtualInfrastructure;
+	private LinkedList<Workload> workloads;
 
+	// optional fields without default values
+	private VirtualInfrastructure virtualInfrastructure;
 	private String startStatsScript;
 	private String stopStatsScript;
 
+	
 	public RunConfiguration() {
 		super();
 		
 		//create a default runStrategy and workload
 		runStrategy = new FixedRunStrategy();
 		Workload defaultWorkload = new AuctionWorkload();
+		workloads = new LinkedList<Workload>();
 		workloads.add(defaultWorkload);
 	}
 	
