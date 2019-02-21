@@ -15,10 +15,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown=true)
 public class FixedRunStrategy extends RunStrategy {
+	// RunConfiguration fields
 	// type specific
 	private int users = 1000;
 	private String runLength = "short";
@@ -26,7 +24,7 @@ public class FixedRunStrategy extends RunStrategy {
 	private long steadyState = 900;
 	private long rampDown = 120;
 
-	// getters and setters
+	// RunConfiguration getters and setters
 	public int getUsers() {
 		return users;
 	}
@@ -65,6 +63,13 @@ public class FixedRunStrategy extends RunStrategy {
 
 	public void setRampDown(long rampDown) {
 		this.rampDown = rampDown;
+	}
+
+	// Runtime
+	@Override
+	public void start() {
+		System.out.println("debugprint FixedRunStrategy starting run");
+		runProc.run();
 	}
 
 }

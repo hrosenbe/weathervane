@@ -15,10 +15,12 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.IOException;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+import com.vmware.weathervane.auction.runtime.WeathervaneTypes;
+
 public class AuctionWebServer extends AuctionService {
+	// RunConfiguration fields
 	private String impl = "nginx"; // leave the possibility of different service implementations
 	private String cpuRequest = "1500m";
 	private String cpuLimit = "2";
@@ -41,7 +43,12 @@ public class AuctionWebServer extends AuctionService {
 	private String cacheVolumeName = "nginxCache";
 	private String cacheVolumeSize = "10Gi";
 
-	// getters and setters
+	public AuctionWebServer() {
+		super();
+		numInstances = 2;
+	}
+
+	// RunConfiguration getters and setters
 	public String getImpl() {
 		return impl;
 	}
@@ -176,6 +183,38 @@ public class AuctionWebServer extends AuctionService {
 
 	public void setCacheVolumeSize(String cacheVolumeSize) {
 		this.cacheVolumeSize = cacheVolumeSize;
+	}
+
+	// RunTime
+	private final String tierType = WeathervaneTypes.tierFrontEnd;
+	private final String serviceType = null; //TODO WeathervaneTypes.webServer;
+	private final String serviceImpl = "nginx"; //TODO
+
+	@Override
+	public String getTierType() {
+		return tierType;
+	}
+
+	@Override
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	@Override
+	public String configure() {
+		return null;
+		//TODO return "/tmp/"+serviceImpl+"-" + kubernetesNamespace + ".yaml";
+	}
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public boolean areUp() throws IOException {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 }

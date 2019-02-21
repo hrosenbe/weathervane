@@ -15,16 +15,18 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.IOException;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+import com.vmware.weathervane.auction.runtime.WeathervaneTypes;
+
 public class AuctionNosqlServer extends AuctionService {
+	// RunConfiguration fields
 	private boolean replicated = false;
 	private boolean sharded = false;
 	private int replicasPerShard = 3;
 	private int portStep = 100;
 
-    // Used for Docker
+	// Used for Docker
 	private boolean useNamedVolumes = false;
 	private String dataVolumeName = "mongodbData";
 	private String dataVolumeSize = "200Gi";
@@ -35,14 +37,14 @@ public class AuctionNosqlServer extends AuctionService {
 	private String c3DataVolumeName = "mongodbC3Data";
 	private String c3DataVolumeSize = "10Gi";
 
-    // Used for Kubernetes
+	// Used for Kubernetes
 	private String dataStorageClass = "fast";
 
 	private boolean mongodbTouch = true;
 	private boolean mongodbTouchFull = false;
 	private boolean mongodbTouchPreview = false;
 
-    // getters and setters
+	// RunConfiguration getters and setters
 	public boolean isReplicated() {
 		return replicated;
 	}
@@ -177,6 +179,39 @@ public class AuctionNosqlServer extends AuctionService {
 
 	public void setMongodbTouchPreview(boolean mongodbTouchPreview) {
 		this.mongodbTouchPreview = mongodbTouchPreview;
+	}
+
+	// RunTime
+	private final String tierType = WeathervaneTypes.tierData;
+	private final String serviceType = null; //TODO WeathervaneTypes.nosqlServer;
+	private final String serviceImpl = "mongodb"; //TODO
+
+	@Override
+	public String getTierType() {
+		return tierType;
+	}
+
+	@Override
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	@Override
+	public String configure() {
+		return null;
+		//TODO return "/tmp/"+serviceImpl+"-" + kubernetesNamespace + ".yaml";
+	}
+
+
+	@Override
+	public void start() throws IOException {
+		super.start();
+	}
+
+	@Override
+	public boolean areUp() throws IOException {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 }

@@ -15,17 +15,20 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.vmware.weathervane.auction.runtime.ServiceInstance;
 
 @JsonTypeInfo(use = com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME, include = As.PROPERTY, property = "type")
-@JsonSubTypes({ 
+@JsonSubTypes({
 		@Type(value = AuctionAppServer.class, name = "auctionAppServer"),
 		@Type(value = AuctionBidServer.class, name = "auctionBidServer"),
 		@Type(value = AuctionCoordinationServer.class, name = "auctionCoordinationServer"),
@@ -36,12 +39,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 		@Type(value = AuctionWebServer.class, name = "auctionWebServer"),
 })
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class AuctionService extends Service {
-	private int numInstances = 1;
+	// RunConfiguration fields
+	protected int numInstances = 1;
 	private List<String> computeResourceNames = new LinkedList<String>();
 
-	// getters and setters
+	// RunConfiguration getters and setters
 	public int getNumInstances() {
 		return numInstances;
 	}
@@ -56,6 +59,168 @@ public abstract class AuctionService extends Service {
 
 	public void setComputeResourceNames(List<String> computeResourceNames) {
 		this.computeResourceNames = computeResourceNames;
+	}
+
+	// RunTime
+	protected Map<String, ComputeResource> computeResourcesMap;
+	protected List<ServiceInstance> instances = new ArrayList<>();
+	private String appInstanceComputeResourceName;
+	protected String kubernetesNamespace;
+
+	public void setComputeResourceMap(String appInstanceComputeResourceName, Map<String, ComputeResource> computeResourcesMap) {
+		this.appInstanceComputeResourceName = appInstanceComputeResourceName;
+		this.computeResourcesMap = computeResourcesMap;
+	}
+
+	public void setKubernetesNamespace(String ns) {
+		this.kubernetesNamespace = ns;
+	}
+
+	public abstract String getTierType();
+	public abstract String getServiceType();
+
+	@Override
+	public abstract String configure();
+
+
+	@Override
+	public void start() throws IOException
+	{
+		int nameIndex = 0;
+		//create instances and assign computeResources
+		for (int i = 0; i < getNumInstances(); i++)
+		{
+			ComputeResource computeResource = null;
+			ComputeResource appInstanceComputeResource = computeResourcesMap.get(appInstanceComputeResourceName);
+			if (appInstanceComputeResource instanceof KubernetesComputeResource && getComputeResourceNames().size() > 0) {
+				System.out.println("ERROR AuctionService start appInstance ComputeResource instanceof Kubernetes with ComputeResourceNames specified in service");
+				return;
+			}
+			if (getComputeResourceNames().size() > 0) {
+				computeResource = computeResourcesMap.get(getComputeResourceNames().get(nameIndex));
+				if (computeResource == null) {
+					System.out.println("ERROR AuctionService start computeResourceName not matched in map");
+					return;
+				}
+				if (computeResource instanceof KubernetesComputeResource) {
+					System.out.println("ERROR AuctionService start instanceof KubernetesComputeResource with names specified");
+					return;
+				}
+			} else if (appInstanceComputeResource == null) {
+				System.out.println("ERROR AuctionService start null computeResource");
+				return;
+			} else {
+				computeResource = appInstanceComputeResource;
+			}
+			ServiceInstance instance = new ServiceInstance();
+			instances.add(instance);
+			instance.setComputeResource(computeResource);
+
+			nameIndex++;
+			if (nameIndex >= getComputeResourceNames().size()) {
+				nameIndex = 0;
+			}
+		} // NumInstances
+
+		// Use the first instance of the service for starting the service instances
+		// TODO need to loop through instances for docker and vm?
+		//for (ServiceInstance instance: instances) {
+		if (instances.size() > 0) {
+			ServiceInstance instance = instances.get(0);
+			if (instance.getComputeResource() instanceof KubernetesComputeResource) {
+				//create yaml file
+				//TODO actually create the yaml files instead of reusing existing perl created versions
+				String fileName = configure();
+				if (fileName == null) {
+					System.out.println("ERROR AuctionService start fileName is null, skipping kubernetesApply for "+this+" "+instance);
+					return;
+				}
+
+				try {
+					KubernetesComputeResource kcr = (KubernetesComputeResource)(instance.getComputeResource());
+					kcr.kubernetesApply(fileName, kubernetesNamespace);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					return;
+				}
+			} else if (instance.getComputeResource() instanceof DockerComputeResource) {
+				System.out.println("ERROR AuctionService start docker NYI");
+				return;
+			} else {
+				System.out.println("ERROR AuctionService start unknown computeResource type");
+				return;
+			}
+		}
+	}
+
+
+	@Override
+	public boolean areRunning() throws IOException {
+		//TODO need to loop through instances for docker and vm?
+		//for (ServiceInstance instance: instances) {
+		if (instances.size() > 0) {
+			ServiceInstance instance = instances.get(0);
+			ComputeResource computeResource = instance.getComputeResource();
+			if (computeResource instanceof KubernetesComputeResource) {
+				if (getServiceType() == null) {
+					System.out.println("ERROR AuctionService areRunning getServiceType is null, skipping kubernetesAreAllPodRunning for "+this+" "+instance);
+					return true; //TODO
+				}
+
+				try {
+					KubernetesComputeResource kcr = (KubernetesComputeResource) computeResource;
+					boolean result = kcr.kubernetesAreAllPodRunning("type="+getServiceType(), kubernetesNamespace );
+					if (result == false) {
+						return false;
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					return false;
+				}
+			} else if (computeResource instanceof DockerComputeResource) {
+				System.out.println("ERROR AuctionService areRunning docker NYI");
+				return false;
+			} else {
+				System.out.println("ERROR AuctionService areRunning unknown computeResource type");
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+	@Override
+	public abstract boolean areUp() throws IOException;
+
+
+	@Override
+	public void stop() throws IOException {
+		//TODO need to loop through instances for docker and vm?
+		//for (ServiceInstance instance: instances) {
+		if (instances.size() > 0) {
+			ServiceInstance instance = instances.get(0);
+			ComputeResource computeResource = instance.getComputeResource();
+			if (computeResource instanceof KubernetesComputeResource) {
+				if (getServiceType() == null) {
+					System.out.println("ERROR AuctionService stop getServiceType is null, skipping kubernetesDeleteAll... for "+this+" "+instance);
+					return;
+				}
+
+				try {
+					KubernetesComputeResource kcr = (KubernetesComputeResource) computeResource;
+					kcr.kubernetesDeleteAllWithLabel("type="+getServiceType(), kubernetesNamespace);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else if (instance.getComputeResource() instanceof DockerComputeResource) {
+				System.out.println("ERROR AuctionService stop docker NYI");
+				return;
+			} else {
+				System.out.println("ERROR AuctionService stop unknown computeResource type");
+				return;
+			}
+		}
 	}
 
 }

@@ -13,28 +13,20 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSE
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package com.vmware.weathervane.auction.model;
+package com.vmware.weathervane.auction.runtime;
 
-public class DockerComputeResource extends ComputeResource {
-	// RunConfiguration fields
-	private boolean vicHost = false;
-	private int dockerHostPort = 2376;
+public class WeathervaneTypes {
+	public static final String tierInfrastructure = "infrastructure";
+	public static final String tierData = "data";
+	public static final String tierBackEnd = "backEnd";
+	public static final String tierFrontEnd = "frontend";
+	public static final String tierUndefined = "undefined";
 
-	// RunConfiguration getters and setters
-	public boolean isVicHost() {
-		return vicHost;
-	}
-
-	public void setVicHost(boolean vicHost) {
-		this.vicHost = vicHost;
-	}
-
-	public int getDockerHostPort() {
-		return dockerHostPort;
-	}
-
-	public void setDockerHostPort(int dockerHostPort) {
-		this.dockerHostPort = dockerHostPort;
-	}
-
+	public static final String typeDbServer = "dbServer";
+	public static final String typeAppServer = "appServer";
+	public static final String typeCoordinationServer = "coordinationServer";
+	public static final String typeAuctionBidServer = "auctionBidServer";
+	public static final String typeWebServer = "webServer";
+	public static final String typeNosqlServer = "nosqlServer";
+	public static final String typeMsgServer = "msgServer";
 }

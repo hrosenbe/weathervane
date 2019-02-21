@@ -15,13 +15,17 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.IOException;
+import java.util.Arrays;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+import com.vmware.weathervane.auction.runtime.ServiceInstance;
+import com.vmware.weathervane.auction.runtime.WeathervaneTypes;
+
 public class AuctionDbServer extends AuctionService {
+	// RunConfiguration fields
 	private int postgresqlPort = 5432;
 	private int portStep = 1;
-	private int postgresqlSharedBuffers = 0; 
+	private int postgresqlSharedBuffers = 0;
 	private double postgresqlSharedBuffersPct = 0.25;
 	private int postgresqlEffectiveCacheSize = 0;
 	private double postgresqlEffectiveCacheSizePct = 0.65;
@@ -38,7 +42,7 @@ public class AuctionDbServer extends AuctionService {
 	private String dataStorageClass = "fast";
 	private String logStorageClass = "fast";
 
-	// getters and setters
+	// RunConfiguration getters and setters
 	public int getPostgresqlPort() {
 		return postgresqlPort;
 	}
@@ -149,6 +153,61 @@ public class AuctionDbServer extends AuctionService {
 
 	public void setLogStorageClass(String logStorageClass) {
 		this.logStorageClass = logStorageClass;
+	}
+
+
+	// RunTime
+	private final String tierType = WeathervaneTypes.tierData;
+	private final String serviceType = WeathervaneTypes.typeDbServer;
+	private final String serviceImpl = "postgresql"; //TODO
+
+	@Override
+	public String getTierType() {
+		return tierType;
+	}
+
+	@Override
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	@Override
+	public String configure() {
+		return "/tmp/"+serviceImpl+"-" + kubernetesNamespace + ".yaml";
+	}
+
+	@Override
+	public void start() throws IOException {
+		super.start();
+	}
+
+	@Override
+	public boolean areUp() throws IOException {
+		//TODO need to loop through instances for docker and vm?
+		//for (ServiceInstance instance: instances) {
+		if (instances.size() > 0) {
+			ServiceInstance instance = instances.get(0);
+			ComputeResource computeResource = instance.getComputeResource();
+			if (computeResource instanceof KubernetesComputeResource) {
+				try {
+					KubernetesComputeResource kcr = (KubernetesComputeResource) computeResource;
+					String result = kcr.kubernetesExecOne(serviceImpl, Arrays.asList("/usr/pgsql-9.3/bin/pg_isready -h 127.0.0.1 -p 5432".split("\\s+")), kubernetesNamespace);
+					if (result == null) {
+						return false;
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					return false;
+				}
+			} else if (computeResource instanceof DockerComputeResource) {
+				System.out.println("ERROR AuctionDbServer areUp docker NYI");
+				return false;
+			} else {
+				System.out.println("ERROR AuctionDbServer areUp unknown computeResource type");
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

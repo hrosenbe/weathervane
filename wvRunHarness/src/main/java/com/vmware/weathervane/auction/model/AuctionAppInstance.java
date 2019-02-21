@@ -18,17 +18,17 @@ package com.vmware.weathervane.auction.model;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.vmware.weathervane.auction.runtime.DataManager;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
 public class AuctionAppInstance extends AppInstance {
+	// RunConfiguration fields
 	private List<String> loadPath = new LinkedList<String>();
 	private boolean repeatLoadPath = true;
 	private String computeResourceName;
 	private String imageStoreType = "mongodb";
 	private List<AuctionService> services = new LinkedList<AuctionService>();
-	
-	// getters and setters
+
+	// RunConfiguration getters and setters
 	public List<String> getLoadPath() {
 		return loadPath;
 	}
@@ -68,5 +68,15 @@ public class AuctionAppInstance extends AppInstance {
 	public void setServices(List<AuctionService> services) {
 		this.services = services;
 	}
-	
+
+	// Runtime
+	private DataManager dataManager;
+	public DataManager getDataManager() {
+		return dataManager;
+	}
+
+	public void setDataManager(DataManager dataManager) {
+		this.dataManager = dataManager;
+	}
+
 }

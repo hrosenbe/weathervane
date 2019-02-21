@@ -37,39 +37,43 @@ import com.vmware.weathervane.auction.exception.DuplicateRunConfigurationExcepti
 import com.vmware.weathervane.auction.message.GetRunConfigurationResponse;
 import com.vmware.weathervane.auction.message.ResponseMessage;
 import com.vmware.weathervane.auction.model.RunConfiguration;
+import com.vmware.weathervane.auction.model.RunStrategy;
+import com.vmware.weathervane.auction.runtime.RunProcedure;
 import com.vmware.weathervane.auction.service.RunConfigurationService;
 
 @RestController
-@RequestMapping("/runConfiguration")
 public class RunConfigurationController {
 	private static final Logger logger = LoggerFactory.getLogger(RunConfigurationController.class);
 
 	@Autowired
 	private RunConfigurationService runConfigurationService;
 
-	@RequestMapping(method= RequestMethod.GET)
+	@RequestMapping(value = "/runConfiguration", method= RequestMethod.GET)
 	public HttpEntity<GetRunConfigurationResponse> getConfiguration() {
 		GetRunConfigurationResponse response = new GetRunConfigurationResponse();
 		HttpStatus status = HttpStatus.OK;
 		response.setRunConfiguration(runConfigurationService.getRunConfiguration());
-		
+
 		response.add(linkTo(methodOn(RunConfigurationController.class).getConfiguration()).withSelfRel());
-		
+
 		return new ResponseEntity<GetRunConfigurationResponse>(response, status);
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "/runConfiguration", method = RequestMethod.POST)
 	public HttpEntity<ResponseMessage> addRunConfiguration(@Valid @RequestBody RunConfiguration runConfiguration) throws JsonProcessingException {
 		ResponseMessage addConfigurationResponse = new ResponseMessage();
 		HttpStatus status = HttpStatus.OK;
 		logger.debug("addConfiguration: " + runConfiguration.toString());
 		//logger.warn("addConfiguration: " + new ObjectMapper().writeValueAsString(runConfiguration));
+
+		//TODO fixed configs
+
 		try {
 			/*
-			 * Send the the runConfiguration on to the service that handles (and possible stores) it.
+			 * Send the runConfiguration on to the service that handles (and possible stores) it.
 			 */
 			runConfigurationService.setRunConfiguration(runConfiguration);
-			
+
 			addConfigurationResponse.setMessage("Configuration changed successfully.");
 			addConfigurationResponse.setSuccess(true);
 		} catch (DuplicateRunConfigurationException e) {
@@ -79,6 +83,22 @@ public class RunConfigurationController {
 		}
 
 		return new ResponseEntity<ResponseMessage>(addConfigurationResponse, status);
-	}	
+	}
+
+
+	@RequestMapping(value = "/run", method = RequestMethod.POST)
+	public HttpEntity<ResponseMessage> run() throws JsonProcessingException {
+		HttpStatus status = HttpStatus.OK;
+		RunConfiguration rc = runConfigurationService.getRunConfiguration();
+		logger.warn("run: "+rc);
+
+		if (rc != null) {
+			RunStrategy runStrategy = rc.getRunStrategy();
+			RunProcedure runProc = new RunProcedure(rc);
+			runStrategy.setRunProcedure(runProc);
+			runStrategy.start();
+		}
+		return new ResponseEntity<ResponseMessage>(status);
+	}
 
 }

@@ -15,10 +15,12 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.IOException;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+import com.vmware.weathervane.auction.runtime.WeathervaneTypes;
+
 public class AuctionAppServer extends AuctionService {
+	// RunConfiguration fields
 	private int threads = 49;
 	private int jdbcConnections = 50;
 	private String jvmOpts = "-Xms2g -Xmx2g";
@@ -27,7 +29,7 @@ public class AuctionAppServer extends AuctionService {
 	private int portOffset = 8000;
 	private int portStep = 1;
 
-	// These are tuning knobs for the internals of the auctionApp 
+	// These are tuning knobs for the internals of the auctionApp
 	private boolean randomizeImages = true;
 	private boolean useImageWriterThreads = true;
 	private int numImageWriterThreads = 1;
@@ -39,8 +41,8 @@ public class AuctionAppServer extends AuctionService {
 	private int thumbnailImageCacheSizeMultiplier = 25;
 	private int previewImageCacheSizeMultiplier = 25;
 	private int fullImageCacheSizeMultiplier = 25;
-	
-	// getters and setters
+
+	// RunConfiguration getters and setters
 	public int getThreads() {
 		return threads;
 	}
@@ -183,6 +185,38 @@ public class AuctionAppServer extends AuctionService {
 
 	public void setFullImageCacheSizeMultiplier(int fullImageCacheSizeMultiplier) {
 		this.fullImageCacheSizeMultiplier = fullImageCacheSizeMultiplier;
+	}
+
+	// RunTime
+	private final String tierType = WeathervaneTypes.tierBackEnd;
+	private final String serviceType = null; //TODO WeathervaneTypes.appServer;
+	private final String serviceImpl = "tomcat"; //TODO
+
+	@Override
+	public String getTierType() {
+		return tierType;
+	}
+
+	@Override
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	@Override
+	public String configure() {
+		return null;
+		//TODO return "/tmp/"+serviceImpl+"-" + kubernetesNamespace + ".yaml";
+	}
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public boolean areUp() throws IOException {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 }

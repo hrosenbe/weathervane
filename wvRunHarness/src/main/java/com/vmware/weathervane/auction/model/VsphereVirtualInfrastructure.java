@@ -17,14 +17,12 @@ package com.vmware.weathervane.auction.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown=true)
 public class VsphereVirtualInfrastructure extends VirtualInfrastructure {
+	// RunConfiguration fields
 	private MgmtHost mgmtHost;
 	private List<Host> hosts;
 
-	// getters and setters
+	// RunConfiguration getters and setters
 	public MgmtHost getMgmtHost() {
 		return mgmtHost;
 	}

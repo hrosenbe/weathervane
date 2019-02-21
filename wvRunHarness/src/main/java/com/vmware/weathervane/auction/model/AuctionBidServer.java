@@ -15,10 +15,12 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.IOException;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+import com.vmware.weathervane.auction.runtime.WeathervaneTypes;
+
 public class AuctionBidServer extends AuctionService {
+	// RunConfiguration fields
 	private int threads = 25;
 	private int jdbcConnections = 26;
 	private String jvmOpts = "-Xmx4g -Xms4g -XX:+UseG1GC";
@@ -26,8 +28,8 @@ public class AuctionBidServer extends AuctionService {
 	private int httpsPort = 443;
 	private int portOffset = 10000;
 	private int portStep = 1;
-	
-	// getters and setters
+
+	// RunConfiguration getters and setters
 	public int getThreads() {
 		return threads;
 	}
@@ -82,6 +84,38 @@ public class AuctionBidServer extends AuctionService {
 
 	public void setPortStep(int portStep) {
 		this.portStep = portStep;
+	}
+
+	// RunTime
+	private final String tierType = WeathervaneTypes.tierBackEnd;
+	private final String serviceType = null; //TODO WeathervaneTypes.auctionBidServer;
+	private final String serviceImpl = "auctionbidservice"; //TODO
+
+	@Override
+	public String getTierType() {
+		return tierType;
+	}
+
+	@Override
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	@Override
+	public String configure() {
+		return null;
+		//TODO return "/tmp/"+serviceImpl+"-" + kubernetesNamespace + ".yaml";
+	}
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public boolean areUp() throws IOException {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 }

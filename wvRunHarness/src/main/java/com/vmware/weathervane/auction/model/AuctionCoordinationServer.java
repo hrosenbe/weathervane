@@ -15,16 +15,25 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.IOException;
+import java.util.Arrays;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+import com.vmware.weathervane.auction.runtime.ServiceInstance;
+import com.vmware.weathervane.auction.runtime.WeathervaneTypes;
+
 public class AuctionCoordinationServer extends AuctionService {
+	// RunConfiguration fields
 	private int zkClientPort = 2181;
 	private int zkPeerPort = 2888;
 	private int zkElectionPort = 3888;
 	private int portStep = 1;
 
-	// getters and setters
+	public AuctionCoordinationServer() {
+		super();
+		numInstances = 3;
+	}
+
+	// RunConfiguration getters and setters
 	public int getZkClientPort() {
 		return zkClientPort;
 	}
@@ -55,6 +64,60 @@ public class AuctionCoordinationServer extends AuctionService {
 
 	public void setPortStep(int portStep) {
 		this.portStep = portStep;
+	}
+
+	// RunTime
+	private final String tierType = WeathervaneTypes.tierData;
+	private final String serviceType = WeathervaneTypes.typeCoordinationServer;
+	private final String serviceImpl = "zookeeper"; //TODO
+
+	@Override
+	public String getTierType() {
+		return tierType;
+	}
+
+	@Override
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	@Override
+	public String configure() {
+		return "/tmp/"+serviceImpl+"-" + kubernetesNamespace + ".yaml";
+	}
+
+	@Override
+	public void start() throws IOException {
+		super.start();
+	}
+
+	@Override
+	public boolean areUp() throws IOException {
+		//TODO need to loop through instances for docker and vm?
+		//for (ServiceInstance instance: instances) {
+		if (instances.size() > 0) {
+			ServiceInstance instance = instances.get(0);
+			ComputeResource computeResource = instance.getComputeResource();
+			if (computeResource instanceof KubernetesComputeResource) {
+				try {
+					KubernetesComputeResource kcr = (KubernetesComputeResource) computeResource;
+					String result = kcr.kubernetesExecOne(serviceImpl, Arrays.asList(new String[] {"/bin/sh", "-c", "[ \"imok\" = \"$(echo ruok | nc -w 1 127.0.0.1 2181)\" ]"}), kubernetesNamespace);
+					if (result == null) {
+						return false;
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					return false;
+				}
+			} else if (computeResource instanceof DockerComputeResource) {
+				System.out.println("ERROR AuctionCoordServer areUp docker NYI");
+				return false;
+			} else {
+				System.out.println("ERROR AuctionCoordServer areUp unknown computeResource type");
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

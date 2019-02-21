@@ -15,14 +15,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.IOException;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+import com.vmware.weathervane.auction.runtime.WeathervaneTypes;
+
 public class AuctionMsgServer extends AuctionService {
+	// RunConfiguration fields
 	private int rabbitmqPort = 5672;
 	private int portStep = 1;
 
-	// getters and setters
+	// RunConfiguration getters and setters
 	public int getRabbitmqPort() {
 		return rabbitmqPort;
 	}
@@ -37,6 +39,38 @@ public class AuctionMsgServer extends AuctionService {
 
 	public void setPortStep(int portStep) {
 		this.portStep = portStep;
+	}
+
+	// RunTime
+	private final String tierType = WeathervaneTypes.tierData;
+	private final String serviceType = null; //TODO WeathervaneTypes.msgServer;
+	private final String serviceImpl = "rabbitmq"; //TODO
+
+	@Override
+	public String getTierType() {
+		return tierType;
+	}
+
+	@Override
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	@Override
+	public String configure() {
+		return null;
+		//TODO return "/tmp/"+serviceImpl+"-" + kubernetesNamespace + ".yaml";
+	}
+
+	@Override
+	public void start() throws IOException {
+		super.start();
+	}
+
+	@Override
+	public boolean areUp() throws IOException {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 }

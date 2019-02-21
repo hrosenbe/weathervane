@@ -18,10 +18,8 @@ package com.vmware.weathervane.auction.model;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown=true)
 public class AuctionDriver extends Driver {
+	// RunConfiguration fields
 	private int numInstances = 1;
 	private List<String> computeResourceNames = new LinkedList<String>();
 	private int port = 7500;
@@ -35,9 +33,8 @@ public class AuctionDriver extends Driver {
 	private String cpuLimit = "2";
 	private String memRequest = "2Gi";
 	private String memLimit = "7Gi";
-    
-	// getters and setters
 
+	// RunConfiguration getters and setters
 	public int getNumInstances() {
 		return numInstances;
 	}

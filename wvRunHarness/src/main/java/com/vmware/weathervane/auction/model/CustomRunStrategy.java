@@ -18,22 +18,20 @@ package com.vmware.weathervane.auction.model;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown=true)
 public class CustomRunStrategy extends RunStrategy {
+	// RunConfiguration fields
 	// same as Fixed
 	private int users = 1000;
 	private String runLength = "short";
 	private long rampUp = 600;
 	private long steadyState = 900;
 	private long rampDown = 120;
-	
+
 	// type specific
 	private List<String> loadPath = new LinkedList<String>();
 	private boolean repeatLoadPath = true;
 
-	// getters and setters
+	// RunConfiguration getters and setters
 	public int getUsers() {
 		return users;
 	}
@@ -89,5 +87,5 @@ public class CustomRunStrategy extends RunStrategy {
 	public void setRepeatLoadPath(boolean repeatLoadPath) {
 		this.repeatLoadPath = repeatLoadPath;
 	}
-	
+
 }

@@ -15,14 +15,12 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown=true)
 public class Host {
+	// RunConfiguration fields
 	private String type;
 	private String hostname;
 
-	// getters and setters
+	// RunConfiguration getters and setters
 	public String getType() {
 		return type;
 	}
@@ -37,5 +35,5 @@ public class Host {
 
 	public void setHostname(String hostname) {
 		this.hostname = hostname;
-	}    
+	}
 }

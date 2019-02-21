@@ -21,27 +21,24 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown=true)
 public class RunConfiguration {
 
-	// required input fields
+	// RunConfiguration fields
 	@NotNull
 	@Size(min = 1)
 	private String dockerNamespace;
 	@NotNull
 	@Size(min = 1)
 	private List<ComputeResource> computeResources = new LinkedList<ComputeResource>();
-	
+
 	// optional fields with default values
 	private String description = "default description";
 	private String configurationSize = "custom";
-	
+
 	private long maxDuration = 7200;
 	private int maxUsers = 1000;
 
-	private int loglevel = 1; 
+	private int loglevel = 1;
 	private boolean truncateLogs = true;
 	private int maxLogLines = 4000;
 
@@ -55,7 +52,7 @@ public class RunConfiguration {
 	private boolean stopOnFailure = true;
 
 	private double responseTimePassingPercentile = 0.99;
-	
+
 	private String runProcedure = "full";
 	private boolean interactive = false;
 
@@ -68,18 +65,18 @@ public class RunConfiguration {
 	private String startStatsScript;
 	private String stopStatsScript;
 
-	
+
 	public RunConfiguration() {
 		super();
-		
+
 		//create a default runStrategy and workload
 		runStrategy = new FixedRunStrategy();
 		Workload defaultWorkload = new AuctionWorkload();
 		workloads = new LinkedList<Workload>();
 		workloads.add(defaultWorkload);
 	}
-	
-	// getters and setters
+
+	// RunConfiguration getters and setters
 	public String getDescription() {
 		return description;
 	}

@@ -15,9 +15,25 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.IOException;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Service {
 
+	// Runtime
+	public abstract String configure();
+	public abstract void start() throws IOException;
+	public abstract boolean areUp() throws IOException;
+	public abstract boolean areRunning() throws IOException;
+	public abstract void stop() throws IOException;
+
+/* TODO
+	public abstract void setComputeResources() {
+	public abstract List<String> getIpAddrs() {
+	public abstract void getLogFiles() {
+	public abstract void getStatsFiles() {
+	public abstract void parseLogFiles() {
+	public abstract void getConfigFiles() {
+	public abstract void getConfigSummary() {
+	public abstract void getStatsSummary() {
+*/
 }

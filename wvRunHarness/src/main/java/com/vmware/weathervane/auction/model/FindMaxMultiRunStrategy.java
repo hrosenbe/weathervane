@@ -15,23 +15,21 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown=true)
 public class FindMaxMultiRunStrategy extends RunStrategy{
+	// RunConfiguration fields
 	// same as Fixed
 	private int users = 1000;
 	private String runLength = "short";
 	private long rampUp = 600;
 	private long steadyState = 900;
 	private long rampDown = 120;
-	
+
 	// type specific
 	private long initialRateStep = 500;
 	private long minRateStep = 250;
 	private int repeatsAtMax = 0;
 
-	// getters and setters
+	// RunConfiguration getters and setters
 	public int getUsers() {
 		return users;
 	}

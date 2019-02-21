@@ -13,28 +13,31 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSE
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package com.vmware.weathervane.auction.model;
+package com.vmware.weathervane.auction.runtime;
 
-public class DockerComputeResource extends ComputeResource {
-	// RunConfiguration fields
-	private boolean vicHost = false;
-	private int dockerHostPort = 2376;
+public class DataManager {
 
-	// RunConfiguration getters and setters
-	public boolean isVicHost() {
-		return vicHost;
-	}
+	public void prepareData() {
+		System.out.println("debugprint DataManager preparedata");
 
-	public void setVicHost(boolean vicHost) {
-		this.vicHost = vicHost;
-	}
 
-	public int getDockerHostPort() {
-		return dockerHostPort;
-	}
+		//TODO
 
-	public void setDockerHostPort(int dockerHostPort) {
-		this.dockerHostPort = dockerHostPort;
+
+		//if reloaddb
+
+		String tierType = WeathervaneTypes.tierData;
+		//appInstance.startServices(tierType)
+		//appInstance.setExternalPortNumber()
+		//isUpdataServices
+		//startAuctionDataManagerContainer
+
+		//loaddb if necessary
+
+		//stop data services and start in main process
+		//stopAuctionDataManagerContainer
+		//appInstance.stopServices("data")
+		//appInstance.unRegisterPortNumbers
 	}
 
 }

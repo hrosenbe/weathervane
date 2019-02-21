@@ -18,14 +18,12 @@ package com.vmware.weathervane.auction.model;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown=true)
 public class AuctionWorkload extends Workload {
+	// RunConfiguration fields
 	private AuctionDriver driver = new AuctionDriver();
 	private List<AuctionAppInstance> appInstances = new LinkedList<AuctionAppInstance>();
 
-    public AuctionWorkload() {
+	public AuctionWorkload() {
 		super();
 
 		// create a default list of services in a default app instance
@@ -53,8 +51,7 @@ public class AuctionWorkload extends Workload {
 		appInstances.add(appInstance);
 	}
 
-	// getters and setters
-    
+	// RunConfiguration getters and setters
 	public AuctionDriver getDriver() {
 		return driver;
 	}
