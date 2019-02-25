@@ -232,6 +232,15 @@ public class RunProcedure {
 		//initializeWorkloadsDrivers
 		//runWorkloads
 
+
+		try {
+			long duration = 20000;
+			System.out.println("debugprint RunProcedure sleep between start and stop "+duration);
+			Thread.sleep(duration);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		//get config,stats,logs
 
 		//TODO if stopservices

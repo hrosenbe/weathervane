@@ -21,6 +21,7 @@ import com.vmware.weathervane.auction.runtime.WeathervaneTypes;
 
 public class AuctionWebServer extends AuctionService {
 	// RunConfiguration fields
+	private int numInstances = 2;
 	private String impl = "nginx"; // leave the possibility of different service implementations
 	private String cpuRequest = "1500m";
 	private String cpuLimit = "2";
@@ -43,12 +44,15 @@ public class AuctionWebServer extends AuctionService {
 	private String cacheVolumeName = "nginxCache";
 	private String cacheVolumeSize = "10Gi";
 
-	public AuctionWebServer() {
-		super();
-		numInstances = 2;
+	// RunConfiguration getters and setters
+	public int getNumInstances() {
+		return numInstances;
 	}
 
-	// RunConfiguration getters and setters
+	public void setNumInstances(int numInstances) {
+		this.numInstances = numInstances;
+	}
+
 	public String getImpl() {
 		return impl;
 	}

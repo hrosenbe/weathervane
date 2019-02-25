@@ -17,6 +17,8 @@ package com.vmware.weathervane.auction.model;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.vmware.weathervane.auction.runtime.DataManager;
 
@@ -26,7 +28,16 @@ public class AuctionAppInstance extends AppInstance {
 	private boolean repeatLoadPath = true;
 	private String computeResourceName;
 	private String imageStoreType = "mongodb";
-	private List<AuctionService> services = new LinkedList<AuctionService>();
+	private List<AuctionService> services = Stream.of(
+														new AuctionAppServer(),
+														new AuctionBidServer(),
+														new AuctionCoordinationServer(),
+														new AuctionDataManager(),
+														new AuctionDbServer(),
+														new AuctionMsgServer(),
+														new AuctionNosqlServer(),
+														new AuctionWebServer()
+													).collect(Collectors.toList());
 
 	// RunConfiguration getters and setters
 	public List<String> getLoadPath() {

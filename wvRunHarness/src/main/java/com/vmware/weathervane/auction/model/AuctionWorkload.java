@@ -15,41 +15,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AuctionWorkload extends Workload {
 	// RunConfiguration fields
 	private AuctionDriver driver = new AuctionDriver();
-	private List<AuctionAppInstance> appInstances = new LinkedList<AuctionAppInstance>();
-
-	public AuctionWorkload() {
-		super();
-
-		// create a default list of services in a default app instance
-		List<AuctionService> serviceList = new LinkedList<AuctionService>();
-
-		AuctionAppServer appServer = new AuctionAppServer();
-		serviceList.add(appServer);
-		AuctionBidServer bidServer = new AuctionBidServer();
-		serviceList.add(bidServer);
-		AuctionCoordinationServer coordServer = new AuctionCoordinationServer();
-		serviceList.add(coordServer);
-		AuctionDataManager dmServer = new AuctionDataManager();
-		serviceList.add(dmServer);
-		AuctionDbServer dbServer = new AuctionDbServer();
-		serviceList.add(dbServer);
-		AuctionMsgServer msgServer = new AuctionMsgServer();
-		serviceList.add(msgServer);
-		AuctionNosqlServer nosqlServer = new AuctionNosqlServer();
-		serviceList.add(nosqlServer);
-		AuctionWebServer webServer = new AuctionWebServer();
-		serviceList.add(webServer);
-
-		AuctionAppInstance appInstance = new AuctionAppInstance();
-		appInstance.setServices(serviceList);
-		appInstances.add(appInstance);
-	}
+	private List<AuctionAppInstance> appInstances = Stream.of(
+			new AuctionAppInstance()
+		).collect(Collectors.toList());
 
 	// RunConfiguration getters and setters
 	public AuctionDriver getDriver() {

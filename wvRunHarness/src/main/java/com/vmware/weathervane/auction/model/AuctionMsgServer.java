@@ -21,10 +21,19 @@ import com.vmware.weathervane.auction.runtime.WeathervaneTypes;
 
 public class AuctionMsgServer extends AuctionService {
 	// RunConfiguration fields
+	private int numInstances = 1;
 	private int rabbitmqPort = 5672;
 	private int portStep = 1;
 
 	// RunConfiguration getters and setters
+	public int getNumInstances() {
+		return numInstances;
+	}
+
+	public void setNumInstances(int numInstances) {
+		this.numInstances = numInstances;
+	}
+
 	public int getRabbitmqPort() {
 		return rabbitmqPort;
 	}

@@ -23,17 +23,21 @@ import com.vmware.weathervane.auction.runtime.WeathervaneTypes;
 
 public class AuctionCoordinationServer extends AuctionService {
 	// RunConfiguration fields
+	private int numInstances = 3;
 	private int zkClientPort = 2181;
 	private int zkPeerPort = 2888;
 	private int zkElectionPort = 3888;
 	private int portStep = 1;
 
-	public AuctionCoordinationServer() {
-		super();
-		numInstances = 3;
+	// RunConfiguration getters and setters
+	public int getNumInstances() {
+		return numInstances;
 	}
 
-	// RunConfiguration getters and setters
+	public void setNumInstances(int numInstances) {
+		this.numInstances = numInstances;
+	}
+
 	public int getZkClientPort() {
 		return zkClientPort;
 	}

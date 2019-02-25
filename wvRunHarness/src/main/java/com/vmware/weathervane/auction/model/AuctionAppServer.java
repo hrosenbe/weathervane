@@ -21,6 +21,7 @@ import com.vmware.weathervane.auction.runtime.WeathervaneTypes;
 
 public class AuctionAppServer extends AuctionService {
 	// RunConfiguration fields
+	private int numInstances = 1;
 	private int threads = 49;
 	private int jdbcConnections = 50;
 	private String jvmOpts = "-Xms2g -Xmx2g";
@@ -43,6 +44,14 @@ public class AuctionAppServer extends AuctionService {
 	private int fullImageCacheSizeMultiplier = 25;
 
 	// RunConfiguration getters and setters
+	public int getNumInstances() {
+		return numInstances;
+	}
+
+	public void setNumInstances(int numInstances) {
+		this.numInstances = numInstances;
+	}
+
 	public int getThreads() {
 		return threads;
 	}

@@ -23,6 +23,7 @@ import com.vmware.weathervane.auction.runtime.WeathervaneTypes;
 
 public class AuctionDbServer extends AuctionService {
 	// RunConfiguration fields
+	private int numInstances = 1;
 	private int postgresqlPort = 5432;
 	private int portStep = 1;
 	private int postgresqlSharedBuffers = 0;
@@ -43,6 +44,14 @@ public class AuctionDbServer extends AuctionService {
 	private String logStorageClass = "fast";
 
 	// RunConfiguration getters and setters
+	public int getNumInstances() {
+		return numInstances;
+	}
+
+	public void setNumInstances(int numInstances) {
+		this.numInstances = numInstances;
+	}
+
 	public int getPostgresqlPort() {
 		return postgresqlPort;
 	}

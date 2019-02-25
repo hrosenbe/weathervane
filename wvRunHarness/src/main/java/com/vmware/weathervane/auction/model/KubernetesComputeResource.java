@@ -177,7 +177,8 @@ public class KubernetesComputeResource extends ComputeResource {
 	}
 
 
-	//TODO needs testing
+/*
+	//TODO not yet used
 	public boolean kubernetesDeleteAll(String resourceType, String namespace) throws IOException, InterruptedException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("kubernetesDeleteAll of type {} in namespace {}", resourceType, namespace);
@@ -197,7 +198,7 @@ public class KubernetesComputeResource extends ComputeResource {
 		}
 		return true;
 	}
-
+*/
 
 	public boolean kubernetesDeleteAllWithLabel(String selector, String namespace) throws IOException, InterruptedException {
 		if (logger.isDebugEnabled()) {
@@ -234,7 +235,9 @@ public class KubernetesComputeResource extends ComputeResource {
 	}
 
 
-	public boolean kubernetesDeleteAllWithLabelAndrRsourceType(String selector, String resourceType, String namespace) throws IOException, InterruptedException {
+/*
+	//TODO not yet used
+	public boolean kubernetesDeleteAllWithLabelAndResourceType(String selector, String resourceType, String namespace) throws IOException, InterruptedException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("kubernetesDeleteAllWithLabelAndResourceType with resourceType {}, label {} in namespace {}", resourceType, selector, namespace);
 		}
@@ -254,7 +257,7 @@ public class KubernetesComputeResource extends ComputeResource {
 		}
 		return true;
 	}
-
+*/
 
 	////
 	private String getString(InputStream inputStream) throws IOException {

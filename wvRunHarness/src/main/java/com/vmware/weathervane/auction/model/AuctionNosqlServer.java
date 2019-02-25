@@ -21,6 +21,7 @@ import com.vmware.weathervane.auction.runtime.WeathervaneTypes;
 
 public class AuctionNosqlServer extends AuctionService {
 	// RunConfiguration fields
+	private int numInstances = 1;
 	private boolean replicated = false;
 	private boolean sharded = false;
 	private int replicasPerShard = 3;
@@ -45,6 +46,14 @@ public class AuctionNosqlServer extends AuctionService {
 	private boolean mongodbTouchPreview = false;
 
 	// RunConfiguration getters and setters
+	public int getNumInstances() {
+		return numInstances;
+	}
+
+	public void setNumInstances(int numInstances) {
+		this.numInstances = numInstances;
+	}
+
 	public boolean isReplicated() {
 		return replicated;
 	}

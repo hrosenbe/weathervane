@@ -41,17 +41,11 @@ import com.vmware.weathervane.auction.runtime.ServiceInstance;
 
 public abstract class AuctionService extends Service {
 	// RunConfiguration fields
-	protected int numInstances = 1;
 	private List<String> computeResourceNames = new LinkedList<String>();
 
 	// RunConfiguration getters and setters
-	public int getNumInstances() {
-		return numInstances;
-	}
-
-	public void setNumInstances(int numInstances) {
-		this.numInstances = numInstances;
-	}
+	public abstract int getNumInstances();
+	public abstract void setNumInstances(int numInstances);
 
 	public List<String> getComputeResourceNames() {
 		return computeResourceNames;
