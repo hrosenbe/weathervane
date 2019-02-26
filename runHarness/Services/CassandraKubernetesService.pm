@@ -108,6 +108,8 @@ sub configure {
 							print FILEOUT $inline;
 						}	
 					}
+				}
+			}
 		}
 		else {
 			print FILEOUT $inline;
@@ -126,7 +128,7 @@ sub configure {
 	my $curPvcSize = $cluster->kubernetesGetSizeForPVC("cassandra-data-cassandra-0", $self->namespace);
 	if (($curPvcSize ne "") && ($curPvcSize ne $dataVolumeSize)) {
 		$cluster->kubernetesDeleteAllWithLabelAndResourceType("impl=cassandra,type=nosqlServer", "pvc", $self->namespace);
-	}	
+	}
 
 }
 
