@@ -109,6 +109,11 @@ sub configure {
 							print FILEOUT $inline;
 						}	
 					}
+				} elsif ( $inline =~ /\-\-\-/ ) {
+					print FILEOUT $inline;
+					last;
+				} else {
+					print FILEOUT $inline;					
 				}
 			}
 		}
