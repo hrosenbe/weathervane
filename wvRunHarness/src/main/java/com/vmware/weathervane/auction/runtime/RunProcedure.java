@@ -30,6 +30,7 @@ public class RunProcedure {
 
 	//private String type = "full";
 	RunConfiguration runConfig;
+	Map<String, ComputeResource> computeResourcesMap;
 
 	public RunProcedure(RunConfiguration runConfig) {
 		super();
@@ -40,7 +41,7 @@ public class RunProcedure {
 	public void run() {
 		System.out.println("debugprint RunProcedure.run.....");
 
-		Map<String, ComputeResource> computeResourcesMap = new HashMap<>();
+		computeResourcesMap = new HashMap<>();
 		for (ComputeResource cr : runConfig.getComputeResources()) {
 			computeResourcesMap.put(cr.getName(), cr);
 		}
@@ -65,168 +66,47 @@ public class RunProcedure {
 		String tierType = WeathervaneTypes.tierData;
 		for (Workload workload : runConfig.getWorkloads()) {
 			System.out.println("debugprint RunProcedure preparedata workload "+workload);
-
 			if (workload instanceof AuctionWorkload){
 				AuctionWorkload auctionWorkload = ((AuctionWorkload) workload);
-
 				for (AuctionAppInstance appInstance : auctionWorkload.getAppInstances()) {
 					System.out.println("debugprint RunProcedure preparedata appinstance "+appInstance);
-
-					//TODO
+					//TODO need to implement prepareData
 					DataManager dataManager = new DataManager();
 					appInstance.setDataManager(dataManager);
 					appInstance.getDataManager().prepareData();
-				}
-			}
-		}
+				} // appInstance
+			} // instance of
+		} // workload
+
 		//maybe cleanupAfterFailure
 
 		//clearReloadDb
 
+		try {
+			tierType = WeathervaneTypes.tierData;
+			startServicesTier(tierType);
+			//setExternalPortNumbers
 
-		//startServices("data")
-		tierType = WeathervaneTypes.tierData;
+			//pretouchdata
 
-		int workloadNum = 1;
-		for (Workload workload : runConfig.getWorkloads()) {
+			tierType = WeathervaneTypes.tierBackEnd;
+			startServicesTier(tierType);
+			//setExternalPortNumbers
 
-			if (workload instanceof AuctionWorkload){
-				AuctionWorkload auctionWorkload = ((AuctionWorkload) workload);
+			tierType = WeathervaneTypes.tierFrontEnd;
+			startServicesTier(tierType);
+			//setExternalPortNumbers
 
-				int appInstanceNum = 1;
-				for (AuctionAppInstance appInstance : auctionWorkload.getAppInstances()) {
+			tierType = WeathervaneTypes.tierInfrastructure;
+			startServicesTier(tierType);
+			//setExternalPortNumbers
 
-					String kubernetesNamespace = "auctionw" + workloadNum + "i" + appInstanceNum;
+			waitForServicesUp();
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+			return;
+		}
 
-					for (AuctionService auctionService : appInstance.getServices())
-					{
-						auctionService.setKubernetesNamespace(kubernetesNamespace);
-
-						//only start the right types for the tier
-						if (auctionService.getTierType().equals(tierType)) {
-							System.out.println("debugprint RunProcedure startServices("+tierType+") "+auctionService);
-							auctionService.setComputeResourceMap(appInstance.getComputeResourceName(), computeResourcesMap);
-							try {
-								auctionService.start();
-							} catch (IOException e) {
-								e.printStackTrace();
-								return;
-							}
-						}
-					} //auctionService
-
-					boolean done = false;
-					int retries = 10;
-					long initialSleep = 1500; //15000; //TODO
-					long waitSleep = 15000;
-
-					try {
-						System.out.println("debugprint RunProcedure initialSleep1 "+initialSleep);
-						Thread.sleep(initialSleep);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-
-					while (!done && retries > 0) {
-						System.out.println("debugprint RunProcedure running loop "+retries);
-						done = true;
-						for (AuctionService auctionService : appInstance.getServices())
-						{
-							if (auctionService.getTierType().equals(tierType)) {
-								boolean result;
-								try {
-									result = auctionService.areRunning();
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-									return;
-								}
-								System.out.println("debugprint RunProcedure "+auctionService+" areRunning "+result);
-								if (result == false) {
-									done = false;
-									break;
-								}
-							}
-						} //auctionService
-						retries--;
-						if (!done && retries > 0) {
-							try {
-								System.out.println("debugprint RunProcedure waitSleep1 "+waitSleep);
-								Thread.sleep(waitSleep);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
-					}
-
-					done = false;
-					retries = 12;
-					initialSleep = 1500; //15000; //TODO
-					waitSleep = 30000;
-
-					try {
-						System.out.println("debugprint RunProcedure initialSleep2 "+initialSleep);
-						Thread.sleep(initialSleep);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-
-					while (!done && retries > 0) {
-						System.out.println("debugprint RunProcedure up loop "+retries);
-						done = true;
-						for (AuctionService auctionService : appInstance.getServices())
-						{
-							if (auctionService.getTierType().equals(tierType)) {
-								boolean result;
-								try {
-									result = auctionService.areUp();
-								} catch (IOException e) {
-									e.printStackTrace();
-									return;
-								}
-								System.out.println("debugprint RunProcedure "+auctionService+" areUp "+result);
-								if (result == false) {
-									done = false;
-									break;
-								}
-							}
-						} //auctionService
-						retries--;
-						if (!done && retries > 0) {
-							try {
-								System.out.println("debugprint RunProcedure waitSleep2 "+waitSleep);
-								Thread.sleep(waitSleep);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
-
-					}
-
-					appInstanceNum++;
-				} //appInstance
-
-			} //instance of
-
-			workloadNum++;
-		} //workload
-		//setExternalPortNumbers
-
-		//pretouchdata
-
-		//startServices("backend")
-		tierType = WeathervaneTypes.tierBackEnd;
-		//setExternalPortNumbers
-
-		//startServices("frontend")
-		tierType = WeathervaneTypes.tierFrontEnd;
-		//setExternalPortNumbers
-
-		//startServices("infrastructure")
-		tierType = WeathervaneTypes.tierInfrastructure;
-		//setExternalPortNumbers
-
-		//isUp
 
 		//configureWorkloadDrivers
 		//initializeWorkloadsDrivers
@@ -243,56 +123,143 @@ public class RunProcedure {
 
 		//get config,stats,logs
 
-		//TODO if stopservices
-		{
-			//stopServices (all tiers)
-			for (Workload workload : runConfig.getWorkloads()) {
+		try {
+			//TODO if stopservices
+			{
+				stopServices(); //all tiers
 
-				if (workload instanceof AuctionWorkload){
-					AuctionWorkload auctionWorkload = ((AuctionWorkload) workload);
+//	 			$sanityPassed = $self->sanityCheckServices($cleanupLogDir);
+//				$self->unRegisterPortNumbers();
 
-					for (AuctionAppInstance appInstance : auctionWorkload.getAppInstances()) {
+//				$sanityPassed = $self->sanityCheckServices($cleanupLogDir);
 
-						//TODO should the tier loop go outside the appInstance (or workload) loop?
-						String[] tierTypes = {WeathervaneTypes.tierFrontEnd, WeathervaneTypes.tierBackEnd, WeathervaneTypes.tierData, WeathervaneTypes.tierInfrastructure};
-						for (String stopTierType : tierTypes) {
-							for (AuctionService auctionService : appInstance.getServices())
-							{
-								if (auctionService.getTierType().equals(stopTierType)) {
-									try {
-										System.out.println("debugprint RunProcedure stopServices " + "("+stopTierType+") "+auctionService);
-										auctionService.stop();
-									} catch (IOException e) {
-										e.printStackTrace();
-										return;
-									}
-								}
-							}  //auctionService
-						} //tierTypes
+//				# Let the appInstances clean any run specific data or services
+//				$self->cleanupAppInstances($cleanupLogDir);
 
-					} //appInstance
-
-				} //instance of
-
-			} //workload
-
-//	 		$sanityPassed = $self->sanityCheckServices($cleanupLogDir);
-//			$self->unRegisterPortNumbers();
-
-//			$sanityPassed = $self->sanityCheckServices($cleanupLogDir);
-
-//			# Let the appInstances clean any run specific data or services
-//			$self->cleanupAppInstances($cleanupLogDir);
-
-//			# clean up old logs and stats
-//			$self->cleanup();
+//				# clean up old logs and stats
+//				$self->cleanup();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
 		}
 
 		//save more stuff
 
 		//stopWorkloads
 
-
 	}
 
+
+	void startServicesTier(String tierType) throws IOException, InterruptedException {
+		int workloadNum = 1;
+		for (Workload workload : runConfig.getWorkloads()) {
+			if (workload instanceof AuctionWorkload) {
+				AuctionWorkload auctionWorkload = ((AuctionWorkload) workload);
+				int appInstanceNum = 1;
+				for (AuctionAppInstance appInstance : auctionWorkload.getAppInstances()) {
+					String kubernetesNamespace = "auctionw" + workloadNum + "i" + appInstanceNum;
+					for (AuctionService auctionService : appInstance.getServices()) {
+						// only start the right types for the tier
+						if (auctionService.getTierType().equals(tierType)) {
+							System.out.println("debugprint RunProcedure startServices(" + tierType + ") " + auctionService);
+							auctionService.setKubernetesNamespace(kubernetesNamespace);
+							auctionService.setComputeResourceMap(appInstance.getComputeResourceName(), computeResourcesMap);
+							auctionService.start();
+						}
+					} // auctionService
+
+					boolean done = false;
+					int retries = 10;
+					long initialSleep = 1500; // 15000; //TODO
+					long waitSleep = 15000;
+
+					System.out.println("debugprint RunProcedure areRunning initialSleep " + initialSleep);
+					Thread.sleep(initialSleep);
+					while (!done && retries > 0) {
+						System.out.println("debugprint RunProcedure areRunning loop " + retries);
+						done = true;
+						for (AuctionService auctionService : appInstance.getServices()) {
+							if (auctionService.getTierType().equals(tierType)) {
+								boolean result = auctionService.areRunning();
+								System.out.println("debugprint RunProcedure areRunning " + auctionService + " " + result);
+								if (result == false) {
+									done = false;
+									break;
+								}
+							}
+						} // auctionService
+						retries--;
+						if (!done && retries > 0) {
+							System.out.println("debugprint RunProcedure areRunning waitSleep " + waitSleep);
+							Thread.sleep(waitSleep);
+						}
+					} // while
+					appInstanceNum++;
+				} // appInstance
+			} // instance of
+			workloadNum++;
+		} // workload
+	}
+
+
+	void stopServices() throws IOException {
+		String[] tierTypes = {WeathervaneTypes.tierFrontEnd, WeathervaneTypes.tierBackEnd, WeathervaneTypes.tierData, WeathervaneTypes.tierInfrastructure};
+		for (Workload workload : runConfig.getWorkloads()) {
+			if (workload instanceof AuctionWorkload){
+				AuctionWorkload auctionWorkload = ((AuctionWorkload) workload);
+				for (AuctionAppInstance appInstance : auctionWorkload.getAppInstances()) {
+					for (String stopTierType : tierTypes) {
+						for (AuctionService auctionService : appInstance.getServices()) {
+							if (auctionService.getTierType().equals(stopTierType)) {
+								System.out.println("debugprint RunProcedure stopServices " + "(" + stopTierType + ") " + auctionService);
+								auctionService.stop();
+							}
+						} // auctionService
+					} // tierTypes
+				} // appInstance
+			} // instance of
+		} // workload
+	}
+
+
+	void waitForServicesUp() throws InterruptedException, IOException {
+		String[] tierTypes = { WeathervaneTypes.tierData, WeathervaneTypes.tierBackEnd, WeathervaneTypes.tierFrontEnd, WeathervaneTypes.tierInfrastructure };
+		for (Workload workload : runConfig.getWorkloads()) {
+			if (workload instanceof AuctionWorkload) {
+				AuctionWorkload auctionWorkload = ((AuctionWorkload) workload);
+				for (AuctionAppInstance appInstance : auctionWorkload.getAppInstances()) {
+					boolean done = false;
+					int retries = 12;
+					long initialSleep = 1500; // 15000; //TODO
+					long waitSleep = 15000;
+
+					System.out.println("debugprint RunProcedure areUp initialSleep " + initialSleep);
+					Thread.sleep(initialSleep);
+					while (!done && retries > 0) {
+						System.out.println("debugprint RunProcedure areUp loop " + retries);
+						done = true;
+						for (String stopTierType : tierTypes) {
+							for (AuctionService auctionService : appInstance.getServices()) {
+								if (auctionService.getTierType().equals(stopTierType)) {
+									boolean result;
+									result = auctionService.areUp();
+									System.out.println("debugprint RunProcedure areUp " + auctionService + " " + result);
+									if (result == false) {
+										done = false;
+										break;
+									}
+								} // tierType
+							} // auctionService
+						} // tierTypes
+						retries--;
+						if (!done && retries > 0) {
+							System.out.println("debugprint RunProcedure areUp waitSleep " + waitSleep);
+							Thread.sleep(waitSleep);
+						}
+					}
+				} // appInstance
+			} // instance of
+		} // workload
+	}
 }
