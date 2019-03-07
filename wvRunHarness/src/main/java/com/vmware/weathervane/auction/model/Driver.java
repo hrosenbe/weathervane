@@ -15,6 +15,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-public abstract class AppInstance {
+public abstract class Driver {
 
 }

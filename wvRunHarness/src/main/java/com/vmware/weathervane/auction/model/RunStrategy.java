@@ -15,6 +15,37 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-public abstract class AppInstance {
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.vmware.weathervane.auction.runtime.RunProcedure;
+
+@JsonTypeInfo(use = com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME, include = As.PROPERTY, property = "type")
+@JsonSubTypes({
+		@Type(value = FixedRunStrategy.class, name = "fixed"),
+		@Type(value = TargetUtilizationRunStrategy.class, name = "targetUtilization"),
+		@Type(value = CustomRunStrategy.class, name = "custom"),
+		@Type(value = FindMaxSingleAIRunStrategy.class, name = "findMaxSingleAI"),
+		@Type(value = FindMaxSingleAIWithScalingRunStrategy.class, name = "findMaxSingleAIWithScaling"),
+		@Type(value = FindMaxMultiAIRunStrategy.class, name = "findMaxMultiAI"),
+		@Type(value = FindMaxMultiRunStrategy.class, name = "findMaxMultiRun"),
+		@Type(value = IntervalRunStrategy.class, name = "interval"),
+
+})
+
+public abstract class RunStrategy {
+
+	// Runtime
+	protected RunProcedure runProc;
+
+	public void setRunProcedure(RunProcedure runProc) {
+		this.runProc = runProc;
+	}
+
+	public void start() {
+		System.out.println("debugprint RunStrategy base,  starting run should not happen here.");
+		return;
+	}
 
 }

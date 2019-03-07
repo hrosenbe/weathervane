@@ -13,8 +13,20 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSE
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package com.vmware.weathervane.auction.model;
+package com.vmware.weathervane.auction.runtime;
 
-public abstract class AppInstance {
+import com.vmware.weathervane.auction.model.ComputeResource;
+
+public class ServiceInstance {
+
+	ComputeResource computeResource;
+
+	public ComputeResource getComputeResource() {
+		return computeResource;
+	}
+
+	public void setComputeResource(ComputeResource computeResource) {
+		this.computeResource = computeResource;
+	}
 
 }

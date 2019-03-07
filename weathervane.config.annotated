@@ -66,7 +66,6 @@
 
   "runProcedure" : "full", # Possible values: full, loadOnly, prepareOnly, runOnly, stop
 
-  "version" : true,
   "interactive" : false,
 
   # computeResources is a list of ComputeResources
@@ -92,8 +91,6 @@
       "name" : "aClusterName",
       "type" : "kubernetes",
 
-      # This won't work if running in a container.  Need to include the config file
-      # contents here, not a pointer to the file.
       "kubernetesConfigFile" : "filePointer",
     },
     {
@@ -105,12 +102,13 @@
 
   # The defaults specified here override the baseline defaults which should be
   # specified either in a separate JSON file or in the run harness (or in a database table).
-  # 
+  #
+  # remove this from this hiearchy for now 
   "defaults" : {
     # There are just a few parameters that we want to be able to override in every service, rather
     # than having to specify them for each service separately.  These parameters must be fields in 
     # every service class, and must have globally unique names.
-    "computeResource" : "aHostName"
+    "computeResourceName" : "aHostName"
   
     # Other defaults are specified per service-type.
     # Have one of these sections for each service type (e.g. auctionAppServer, auctionWebServer, etc.)
@@ -142,7 +140,7 @@
         # If the first computeResource is a kubernetes cluster, then all instances will
         # run on that cluster, and other will be ignored (we should emit a warning). So
         # specifying multiple is only for running drivers on Docker hosts.
-        "computeResources" : ["driverClusterName",];
+        "computeResourceNames" : ["driverClusterName",];
   
         "port" : 7500,
         "portStep" : 1,
@@ -178,7 +176,7 @@
           # they must specify the computeResources list in each service type below.
           # If this computeResource is a Kubernetes host, then specifying computeResources
           # in the services is an error.
-          "computeResource" : "aClusterName",
+          "computeResourceName" : "aClusterName",
   
           # Since we are getting rid of the file server, the only remaining options for
           # the image store are mongoDb and memory
@@ -195,7 +193,7 @@
               "numInstances" : 1,
               
               # Should only be one computeResource for auctionDataManager
-              "computeResources" : [ "aHostName1", ],
+              "computeResourceNames" : [ "aHostName1", ],
     
               "threads" : 6,
               "jvmOpts" : "-Xmx4g -Xms4G",
@@ -215,7 +213,7 @@
               # service instances, then the extras won't be used.
               # This mechanism eliminates the default service name (e.g. AuctionApp1) to host
               # mapping through DNS.
-              "computeResources" : [ "aHostName1", "aHostName2"],
+              "computeResourceNames" : [ "aHostName1", "aHostName2"],
     
     	        # All instances for a service are configured identically in a given appInstance.  The 
               # ability to tune each service instance individually is eliminated.

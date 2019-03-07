@@ -15,6 +15,32 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-public abstract class AppInstance {
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class AuctionWorkload extends Workload {
+	// RunConfiguration fields
+	private AuctionDriver driver = new AuctionDriver();
+	private List<AuctionAppInstance> appInstances = Stream.of(
+			new AuctionAppInstance()
+		).collect(Collectors.toList());
+
+	// RunConfiguration getters and setters
+	public AuctionDriver getDriver() {
+		return driver;
+	}
+
+	public void setDriver(AuctionDriver driver) {
+		this.driver = driver;
+	}
+
+	public List<AuctionAppInstance> getAppInstances() {
+		return appInstances;
+	}
+
+	public void setAppInstances(List<AuctionAppInstance> appInstances) {
+		this.appInstances = appInstances;
+	}
 
 }

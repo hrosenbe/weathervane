@@ -15,6 +15,27 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-public abstract class AppInstance {
+import java.util.List;
 
+public class VsphereVirtualInfrastructure extends VirtualInfrastructure {
+	// RunConfiguration fields
+	private MgmtHost mgmtHost;
+	private List<Host> hosts;
+
+	// RunConfiguration getters and setters
+	public MgmtHost getMgmtHost() {
+		return mgmtHost;
+	}
+
+	public void setMgmtHost(MgmtHost mgmtHost) {
+		this.mgmtHost = mgmtHost;
+	}
+
+	public List<Host> getHosts() {
+		return hosts;
+	}
+
+	public void setHosts(List<Host> hosts) {
+		this.hosts = hosts;
+	}
 }

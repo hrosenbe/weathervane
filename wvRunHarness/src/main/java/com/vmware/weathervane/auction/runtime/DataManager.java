@@ -13,8 +13,31 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSE
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package com.vmware.weathervane.auction.model;
+package com.vmware.weathervane.auction.runtime;
 
-public abstract class AppInstance {
+public class DataManager {
+
+	public void prepareData() {
+		System.out.println("debugprint DataManager preparedata");
+
+
+		//TODO
+
+
+		//if reloaddb
+
+		String tierType = WeathervaneTypes.tierData;
+		//appInstance.startServices(tierType)
+		//appInstance.setExternalPortNumber()
+		//isUpdataServices
+		//startAuctionDataManagerContainer
+
+		//loaddb if necessary
+
+		//stop data services and start in main process
+		//stopAuctionDataManagerContainer
+		//appInstance.stopServices("data")
+		//appInstance.unRegisterPortNumbers
+	}
 
 }

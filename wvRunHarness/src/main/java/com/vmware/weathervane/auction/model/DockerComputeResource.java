@@ -15,6 +15,26 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package com.vmware.weathervane.auction.model;
 
-public abstract class AppInstance {
+public class DockerComputeResource extends ComputeResource {
+	// RunConfiguration fields
+	private boolean vicHost = false;
+	private int dockerHostPort = 2376;
+
+	// RunConfiguration getters and setters
+	public boolean isVicHost() {
+		return vicHost;
+	}
+
+	public void setVicHost(boolean vicHost) {
+		this.vicHost = vicHost;
+	}
+
+	public int getDockerHostPort() {
+		return dockerHostPort;
+	}
+
+	public void setDockerHostPort(int dockerHostPort) {
+		this.dockerHostPort = dockerHostPort;
+	}
 
 }
